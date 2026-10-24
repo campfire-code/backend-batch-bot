@@ -1,3 +1,147 @@
+# 后台批量操作机器人（Midscene）
+
+> 篝火出品 · 收录于篝火 App 应用区 · 基于开源项目 [web-infra-dev/midscene](https://github.com/web-infra-dev/midscene)（MIT）
+
+用大白话告诉它要做什么，它看着屏幕自己点、自己填，把网页后台里重复的操作交给机器：比如逐条录入商品、逐页导出数据、批量检查状态。它靠"看截图"操作，不依赖页面源码，换了页面改版也不用重写规则。
+
+> 使用前提：需要你自己准备一个**支持图片识别的多模态大模型**（见下文），模型调用费用由你自己的账号承担。页面截图会发给你选择的模型服务商。
+
+## 下载
+
+到 [Releases](https://github.com/campfire-code/backend-batch-bot/releases/latest) 下载：
+
+| 电脑 | 文件 |
+|---|---|
+| Windows 10 / 11 | `backend-batch-bot_版本号_midscene-studio-beta-…-win32-x64-setup.exe`（Studio 桌面版） |
+| Mac（Apple 芯片：M1 / M2 / M3 / M4） | `…-darwin-arm64.dmg` |
+| Mac（Intel 芯片） | `…-darwin-x64.dmg` |
+| 任意电脑的 Chrome 浏览器 | `…-midscene-extension-v1.17.0.zip`（浏览器插件） |
+
+- 安装包来自上游官方发布，篝火没有修改，附 `SHA256SUMS.txt` 可核对。
+- 上游还有 Linux 版 Studio 和 Windows / macOS 的免安装 zip，篝火没有转发布，需要的请去[上游发布页](https://github.com/web-infra-dev/midscene/releases/tag/v1.17.0)下载。
+- **Studio 目前是上游标注的 Beta（公测）版本**，可能有问题；想先体验推荐用浏览器插件。
+- 首次打开 Mac 版若提示"无法验证开发者"，到"系统设置 - 隐私与安全性"里选择仍要打开。
+
+## 先准备大模型
+
+必须使用**多模态、能看图并定位界面元素**的模型。上游文档（`apps/site/docs/en/model-api-setup.mdx`）列出的可用模型系列如下，名称和 `MIDSCENE_MODEL_FAMILY` 要成对填写：
+
+| 模型系列 | `MIDSCENE_MODEL_NAME` 示例 | `MIDSCENE_MODEL_FAMILY` |
+|---|---|---|
+| 通义千问 Qwen3.x | `qwen3.7-plus` | `qwen3` |
+| 豆包 Seed 2.x | `doubao-seed-2-1-turbo-260628` | `doubao-seed` |
+| 智谱 GLM-V | `glm-5v-turbo`、`glm-4.6v` | `glm-v` |
+| DeepSeek V4 | `deepseek-flash` | `deepseek` |
+| Kimi | `kimi-k2.5`、`kimi-k2.6` | `kimi` |
+| Gemini 3.x | `gemini-3.5-flash` | `gemini` |
+| OpenAI GPT-5 / GPT-6 | `gpt-5.5` | `gpt-5` / `gpt-6` |
+
+以上名称按上游当前文档抄录，服务商改名下线后以上游文档和服务商控制台为准。完整列表与各家接口地址见上游 [Use a model API key](https://midscenejs.com/model-api-setup)。
+
+配置一共四项（接口走 OpenAI 兼容格式）：
+
+```ini
+MIDSCENE_MODEL_BASE_URL="服务商的接口地址，例如 https://dashscope.aliyuncs.com/compatible-mode/v1"
+MIDSCENE_MODEL_API_KEY="你自己的密钥"
+MIDSCENE_MODEL_NAME="qwen3.7-plus"
+MIDSCENE_MODEL_FAMILY="qwen3"
+```
+
+- 通义千问的接口地址是 `https://dashscope.aliyuncs.com/compatible-mode/v1`；豆包（火山引擎）是 `https://ark.cn-beijing.volces.com/api/v3`，其他服务商查各自文档。
+- 密钥只保存在你自己的电脑里，不要发给别人，也不要写进公开的仓库。
+- DeepSeek-V4-Pro 不支持图片输入，不能用。
+
+## 怎么用
+
+### 方式一：浏览器插件（推荐先试）
+
+上游正式渠道是 Chrome 应用商店；打不开商店时可以手动安装本页的插件 zip（手动安装不会自动更新）：
+
+1. 把 `…midscene-extension-v1.17.0.zip` 解压到一个固定文件夹，不要删。
+2. Chrome 地址栏打开 `chrome://extensions/`，打开右上角"开发者模式"。
+3. 点"加载已解压的扩展程序"，选择刚才解压的文件夹。
+4. 点浏览器工具栏的拼图图标，打开 Midscene，右侧出现侧边栏。
+5. 点侧边栏的设置图标，把上面四行配置整段粘贴进去保存。
+6. 打开你要操作的网页后台并保持该页面可见，在侧边栏选 `aiAct`，输入一句话，例如"点开第一条订单，把状态改成已发货"，运行并查看结果。
+
+`aiAssert` 用来检查结果（如"列表第一行状态是已发货"），`aiQuery` 用来把页面上的数据读成 JSON。
+
+### 方式二：Studio 桌面版（Beta）
+
+1. 安装并打开 Studio。
+2. 在模型配置处粘贴上面四行配置并保存。
+3. 选择要操作的平台（网页、Android、iOS、鸿蒙、电脑桌面均在上游支持范围内），连接后在操作面板输入自然语言指令。
+
+Studio 的细节上游文档很少，遇到问题以上游 Issue 为准。界面以英文为主。
+
+### 在自家后台批量操作：用 YAML 脚本
+
+把要重复的步骤写成脚本文件，用上游命令行工具跑（需要 Node.js 20.19+、22.12+ 或 24+）。下面示例中所有字段（`web`、`tasks`、`flow`、`ai`、`aiInput`、`aiTap`、`aiWaitFor`、`aiQuery`、`aiAssert`、`name`、`sleep`）均来自上游 YAML 文档：
+
+```yaml
+# order-ship.yaml：在自家后台给两笔订单填写快递单号并确认发货
+web:
+  url: https://你家后台的地址/orders
+  # 后台需要登录时，先在同一个浏览器里手动登录，或在第一个任务里用 ai 步骤登录
+
+tasks:
+  - name: 第一单发货
+    flow:
+      - ai: 点开订单号为 A1001 的订单详情
+      - aiInput: 快递单号输入框
+        value: SF0000000001
+      - aiTap: 确认发货按钮
+      - aiWaitFor: 页面提示发货成功
+      - aiAssert: 订单状态显示为已发货
+
+  - name: 第二单发货
+    flow:
+      - ai: 返回订单列表，点开订单号为 A1002 的订单详情
+      - aiInput: 快递单号输入框
+        value: SF0000000002
+      - aiTap: 确认发货按钮
+      - aiWaitFor: 页面提示发货成功
+
+  - name: 导出当前列表
+    flow:
+      - aiQuery: 订单列表每一行的订单号和状态，返回 {orderNo: string, status: string}[]
+        name: orders
+```
+
+运行：
+
+```bash
+npm i -g @midscene/cli
+# 在当前目录新建 .env，写入上面四行模型配置（不要加 export）
+midscene ./order-ship.yaml
+```
+
+运行结束会生成可视化报告，能逐步回放每一步的截图。YAML 脚本本身没有循环语法，订单多时请用程序生成多个 task，或改用上游的 JavaScript SDK（见上游文档 Integrate with Playwright / Puppeteer）。
+
+**安全提醒**：批量改动数据前，先在测试数据或单条订单上跑通；脚本会按屏幕内容点击，模型偶尔会点错，不要直接对大批量真实订单一次跑完。
+
+## 验收用例
+
+| 操作 | 应得到 |
+|---|---|
+| 安装插件，粘贴模型配置，打开上游示例页 [TodoMVC](https://todomvc.com/examples/react/dist/#/)，`aiAct` 输入"添加一条名为 Try Midscene 的待办并标记完成" | 页面出现该待办且被勾选 |
+| 同页 `aiAssert` 输入"列表里有 Try Midscene，且已完成" | 断言通过 |
+| 命令行 `pnpm dlx @midscene/test@latest model verify`（带上 `.env`） | 各项检查显示 PASS，确认模型可用 |
+
+## 和上游的区别
+
+- 仅新增中文说明与篝火发布流程（`tool.json`、`.github/workflows/release.yml`），软件代码与上游一致，安装包原样转发布。
+- 移除了上游用于编译、签名的工作流，这些依赖上游的密钥。
+- 上游文档、软件界面以英文为主，本页是篝火整理的中文使用说明。
+
+## 归属与许可证
+
+本仓库由**篝火**整理发布，是篝火 App 应用区收录的开源工具之一。软件全部功能与版权归 [web-infra-dev/midscene](https://github.com/web-infra-dev/midscene) 原作者所有，按 MIT 许可证再分发。全部工具目录见 [toolkit-hub](https://github.com/campfire-code/toolkit-hub)。
+
+---
+
+以下为上游原始说明：
+
 <p align="center">
   <img alt="Midscene.js" width="180" src="https://github.com/user-attachments/assets/f60de3c1-dd6f-4213-97a1-85bf7c6e79e4"><br />
   <strong>See interfaces like a human. E2E testing in natural language.</strong><br />
