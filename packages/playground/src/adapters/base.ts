@@ -54,7 +54,7 @@ export abstract class BasePlaygroundAdapter {
     }
 
     if (!value.params) {
-      return { valid: false, errorMessage: 'Parameters are required' };
+      return { valid: false, errorMessage: '缺少必填参数' };
     }
 
     try {
@@ -85,7 +85,7 @@ export abstract class BasePlaygroundAdapter {
 
   // Helper method for basic error message formatting
   protected formatBasicErrorMessage(error: any): string {
-    return error?.message || 'Unknown error';
+    return error?.message || '未知错误';
   }
 
   // Helper method for parsing structured params base logic
@@ -179,17 +179,17 @@ export abstract class BasePlaygroundAdapter {
       if (errorMessages.length > 0) {
         return {
           valid: false,
-          errorMessage: `Validation error: ${errorMessages.join(', ')}`,
+          errorMessage: `参数校验错误：${errorMessages.join('，')}`,
         };
       }
     }
 
     const errorMsg =
-      error instanceof Error ? error.message : 'Unknown validation error';
+      error instanceof Error ? error.message : '未知的参数校验错误';
 
     return {
       valid: false,
-      errorMessage: `Parameter validation failed: ${errorMsg}`,
+      errorMessage: `参数校验失败：${errorMsg}`,
     };
   }
 

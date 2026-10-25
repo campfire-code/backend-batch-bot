@@ -30,7 +30,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
           }
         }}
       >
-        {copied ? 'Copied' : label}
+        {copied ? '已复制' : label}
       </button>
       {error && <p role="alert">{error}</p>}
     </>
@@ -99,12 +99,12 @@ function SiwcResult() {
         <img src="/icon128.png" width="48" height="48" alt="Midscene" />
         <h1>
           {success ? (
-            '✅ ChatGPT authorization successful'
+            '✅ ChatGPT 授权成功'
           ) : session?.status === 'error' ? (
-            'Authorization failed'
+            '授权失败'
           ) : (
             <>
-              Completing ChatGPT authorization
+              正在完成 ChatGPT 授权
               <span className="authorization-dots" aria-hidden="true">
                 <span>.</span>
                 <span>.</span>
@@ -119,39 +119,33 @@ function SiwcResult() {
       )}
       {success && credentials && (
         <>
-          <p>
-            Credentials are saved locally in the Midscene extension on this
-            browser. Midscene does not collect your credentials.
-          </p>
+          <p>凭据只保存在本浏览器的插件里，不会被收集或上传。</p>
           <section className="usage-guide">
             <div className="config-heading">
-              <h2>Configuration for the extension</h2>
-              <span>Example: GPT-6.1 Sol</span>
+              <h2>插件所需配置</h2>
+              <span>示例：GPT-6.1 Sol</span>
             </div>
             <pre className="config-example">
               <code>{modelConfigExample}</code>
             </pre>
             <div className="config-actions">
-              <CopyButton
-                text={modelConfigExample}
-                label="Copy configuration"
-              />
+              <CopyButton text={modelConfigExample} label="复制配置" />
             </div>
             <p>
-              See the{' '}
+              更多说明请查看{' '}
               <a
                 href="https://midscenejs.com/chatgpt-subscription.html"
                 target="_blank"
                 rel="noreferrer"
               >
-                SIWC documentation
-              </a>{' '}
-              for more details.
+                使用文档
+              </a>
+              。
             </p>
           </section>
           <details className="token-details">
-            <summary>View Access token</summary>
-            <label htmlFor="access-token">🔑 Your Access token:</label>
+            <summary>查看访问令牌</summary>
+            <label htmlFor="access-token">🔑 你的访问令牌：</label>
             <textarea
               id="access-token"
               readOnly
@@ -159,16 +153,13 @@ function SiwcResult() {
               spellCheck={false}
             />
             <p>
-              Expires at:{' '}
-              {new Date(credentials.expires_at).toLocaleString('en-US')}
+              过期时间：{' '}
+              {new Date(credentials.expires_at).toLocaleString('zh-CN')}
             </p>
-            <CopyButton
-              text={credentials.access_token}
-              label="Copy Access token"
-            />
+            <CopyButton text={credentials.access_token} label="复制访问令牌" />
           </details>
           <details className="token-details">
-            <summary>View full credentials</summary>
+            <summary>查看完整凭据</summary>
             <pre className="credentials-json">
               {JSON.stringify(credentials, null, 2)}
             </pre>

@@ -101,7 +101,7 @@ export const ConfigSelector: React.FC<ConfigSelectorProps> = ({
   const configItems: MenuProps['items'] = buildConfigItems();
   const dropdownTrigger = trigger ?? (
     <button
-      aria-label="Open run configuration"
+      aria-label="打开运行配置"
       className="selector-trigger-button"
       type="button"
     >
@@ -169,11 +169,11 @@ export const ConfigSelector: React.FC<ConfigSelectorProps> = ({
               value={deepThink}
               onChange={(e) => setDeepThink(e.target.value)}
             >
-              <Tooltip title="Controlled by MIDSCENE_MODEL_REASONING_ENABLED env variable">
-                <Radio value={'unset'}>Auto</Radio>
+              <Tooltip title="由环境变量 MIDSCENE_MODEL_REASONING_ENABLED 控制">
+                <Radio value={'unset'}>自动</Radio>
               </Tooltip>
-              <Radio value={true}>On</Radio>
-              <Radio value={false}>Off</Radio>
+              <Radio value={true}>开</Radio>
+              <Radio value={false}>关</Radio>
             </Radio.Group>
           </div>
         ),
@@ -207,9 +207,9 @@ export const ConfigSelector: React.FC<ConfigSelectorProps> = ({
               value={domIncluded}
               onChange={(e) => setDomIncluded(e.target.value)}
             >
-              <Radio value={false}>Off</Radio>
-              <Radio value={true}>All</Radio>
-              <Radio value={'visible-only'}>Visible only</Radio>
+              <Radio value={false}>关</Radio>
+              <Radio value={true}>全部</Radio>
+              <Radio value={'visible-only'}>仅可见部分</Radio>
             </Radio.Group>
           </div>
         ),
@@ -230,8 +230,8 @@ export const ConfigSelector: React.FC<ConfigSelectorProps> = ({
               value={imeStrategy}
               onChange={(e) => setImeStrategy(e.target.value)}
             >
-              <Radio value="always-yadb">Always YADB</Radio>
-              <Radio value="yadb-for-non-ascii">YADB for non-ASCII</Radio>
+              <Radio value="always-yadb">始终使用 YADB</Radio>
+              <Radio value="yadb-for-non-ascii">非 ASCII 字符使用 YADB</Radio>
             </Radio.Group>
           </div>
         ),
@@ -250,8 +250,8 @@ export const ConfigSelector: React.FC<ConfigSelectorProps> = ({
                 value={screenshotStrategy}
                 onChange={(e) => setScreenshotStrategy(e.target.value)}
               >
-                <Radio value="auto">Auto</Radio>
-                <Radio value="always-yadb">Always YADB</Radio>
+                <Radio value="auto">自动</Radio>
+                <Radio value="always-yadb">始终使用 YADB</Radio>
               </Radio.Group>
             </div>
           ),
@@ -285,8 +285,8 @@ export const ConfigSelector: React.FC<ConfigSelectorProps> = ({
                 value={keyboardDismissStrategy}
                 onChange={(e) => setKeyboardDismissStrategy(e.target.value)}
               >
-                <Radio value="esc-first">ESC first</Radio>
-                <Radio value="back-first">Back first</Radio>
+                <Radio value="esc-first">先按 Esc</Radio>
+                <Radio value="back-first">先按返回键</Radio>
               </Radio.Group>
             </div>
           ),

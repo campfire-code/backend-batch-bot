@@ -41,9 +41,9 @@ export default defineConfig({
       html: {
         title: ({ entryName }) => {
           if (entryName === 'confirm') {
-            return 'Midscene Bridge';
+            return 'Midscene 桥接';
           }
-          return 'Midscene';
+          return '后台批量操作机器人';
         },
       },
       output: {

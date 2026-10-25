@@ -447,7 +447,7 @@ chrome.runtime.onConnect.addListener((port) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === SIWC_LOGIN_MESSAGE) {
     if (sender.id !== chrome.runtime.id || sender.tab) {
-      sendResponse({ success: false, error: 'Invalid SIWC login request.' });
+      sendResponse({ success: false, error: '无效的 ChatGPT 登录请求。' });
       return false;
     }
     startSiwcLogin().then(
@@ -523,7 +523,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       const { id } = payload;
       const context = cacheMap.get(id) as UIContext;
       if (!context) {
-        sendResponse({ error: 'Screenshot not found' });
+        sendResponse({ error: '未找到截图' });
       } else {
         sendResponse({ context });
       }
@@ -588,7 +588,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     case workerMessageTypes.BRIDGE_RESET_PERMISSION: {
       if (!chrome?.storage?.local) {
-        sendResponse({ success: false, error: 'chrome.storage not available' });
+        sendResponse({ success: false, error: 'chrome.storage 不可用' });
         return true;
       }
       chrome.storage.local
@@ -630,7 +630,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break;
     }
     default:
-      sendResponse({ error: 'Unknown message type' });
+      sendResponse({ error: '未知的消息类型' });
       break;
   }
 

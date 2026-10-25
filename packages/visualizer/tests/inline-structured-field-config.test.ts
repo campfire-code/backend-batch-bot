@@ -121,7 +121,7 @@ describe('getInlineStructuredFieldConfig', () => {
 
     expect(getInlineStructuredFieldConfig(actionSpace, 'aiQuery')).toEqual({
       name: 'query',
-      placeholder: 'Enter query',
+      placeholder: '请输入query',
     });
   });
 
@@ -140,7 +140,7 @@ describe('getInlineStructuredFieldConfig', () => {
 
     expect(getInlineStructuredFieldConfig(actionSpace, 'aiTap')).toEqual({
       name: 'locate',
-      placeholder: 'Describe the element you want to interact with',
+      placeholder: '描述想要操作的元素',
     });
   });
 

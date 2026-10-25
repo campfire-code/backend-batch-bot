@@ -17,9 +17,7 @@ import { formatPlaygroundError } from '../src/hooks/usePlaygroundExecution';
 
 describe('playground error formatting', () => {
   it('does not render an opaque empty error object as JSON braces', () => {
-    expect(formatPlaygroundError({})).toBe(
-      'Unknown error (an empty error object was received)',
-    );
+    expect(formatPlaygroundError({})).toBe('未知错误（收到的错误对象为空）');
   });
 
   it('uses the nested cause message when the outer error has none', () => {

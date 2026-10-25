@@ -373,7 +373,7 @@ describe('PlaygroundServer independent persisted reports', () => {
     await running;
     await expect(
       adapter.executeAction('aiAct', { type: 'aiAct' }, {}),
-    ).rejects.toThrow('Another task is already running');
+    ).rejects.toThrow('已有任务正在运行');
     const cancelled = await adapter.cancelTask('local-cancel');
     const result = (await execution) as any;
     expect(cancelled.success).toBe(true);

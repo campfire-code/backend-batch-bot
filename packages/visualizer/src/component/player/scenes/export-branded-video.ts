@@ -377,7 +377,7 @@ export async function exportBrandedVideo(
   onProgress?: (pct: number) => void,
 ): Promise<void> {
   if (activeExport) {
-    throw new Error('Video export is already in progress');
+    throw new Error('视频正在导出中');
   }
   activeExport = true;
   try {
@@ -481,16 +481,12 @@ async function runExportBrandedVideo(
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        finishWithError(
-          new Error(
-            'Video export was interrupted because the report tab was hidden',
-          ),
-        );
+        finishWithError(new Error('报告页面被切到后台，视频导出已中断'));
       }
     };
 
     recorder.onerror = () => {
-      finishWithError(new Error('MediaRecorder error'));
+      finishWithError(new Error('录制视频出错'));
     };
     recorder.onstop = () => {
       cleanup();
@@ -501,7 +497,7 @@ async function runExportBrandedVideo(
         return;
       }
       if (chunks.length === 0) {
-        reject(new Error('No video data'));
+        reject(new Error('没有视频数据'));
         return;
       }
       const blob = new Blob(chunks, { type: 'video/webm' });
@@ -530,9 +526,7 @@ async function runExportBrandedVideo(
         nextFrame > 0 &&
         isExportRenderStalled(timestamp - lastFrameAt, frameDuration)
       ) {
-        finishWithError(
-          new Error('Video export was interrupted because rendering stalled'),
-        );
+        finishWithError(new Error('画面渲染卡住，视频导出已中断'));
         return;
       }
 

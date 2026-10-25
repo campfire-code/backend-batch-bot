@@ -437,7 +437,9 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
     const currentEvents = getCurrentEvents();
 
     if (currentEvents.length === 0) {
-      message.warning(`No events to generate ${type} from`);
+      message.warning(
+        `没有可用于生成 ${type === 'playwright' ? 'Playwright 代码' : 'YAML'} 的事件`,
+      );
       return;
     }
 
@@ -452,26 +454,24 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
     const progressSteps: ProgressStep[] = [
       {
         id: 'descriptions',
-        title: 'Generate Element Descriptions',
-        description: 'Analyzing UI elements and generating descriptions',
+        title: '生成元素描述',
+        description: '正在分析页面元素并生成描述',
         status: 'pending',
       },
       {
         id: 'title',
-        title: 'Generate Title & Description',
-        description: 'Creating session title and description using AI',
+        title: '生成标题和描述',
+        description: '正在用 AI 生成会话标题和描述',
         status: 'pending',
       },
       {
         id: type,
         title:
-          type === 'playwright'
-            ? 'Generate Playwright Code'
-            : 'Generate YAML Configuration',
+          type === 'playwright' ? '生成 Playwright 代码' : '生成 YAML 配置',
         description:
           type === 'playwright'
-            ? 'Creating executable Playwright test code'
-            : 'Creating YAML configuration',
+            ? '正在生成可执行的 Playwright 测试代码'
+            : '正在生成 YAML 配置',
         status: 'pending',
       },
     ];
@@ -532,8 +532,8 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
         status: 'loading',
         details:
           type === 'playwright'
-            ? 'Generating Playwright test code...'
-            : `Generating YAML configuration in ${resolvedYamlLanguage}...`,
+            ? '正在生成 Playwright 测试代码...'
+            : `正在生成 YAML 配置（语言：${resolvedYamlLanguage}）...`,
       });
 
       finalEvents = getCurrentEvents();
@@ -562,7 +562,7 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
             stream: true,
             onChunk: createStreamingChunkHandler(type),
             testName: currentSessionName,
-            description: `Test session recorded on ${new Date().toLocaleDateString()}`,
+            description: `录制于 ${new Date().toLocaleDateString('zh-CN')} 的测试会话`,
             includeTimestamps: true,
             language: resolvedYamlLanguage,
           },
@@ -599,7 +599,7 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
 
       // Show success message
       message.success(
-        `AI ${type === 'playwright' ? 'Playwright test' : 'YAML configuration'} generated successfully!`,
+        `AI 已成功生成${type === 'playwright' ? ' Playwright 测试代码' : ' YAML 配置'}`,
       );
     } catch (error) {
       recordLogger.error(`Failed to generate ${type}`, undefined, error);
@@ -609,13 +609,13 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
       if (currentStep >= 0) {
         updateProgressStep(currentStep, {
           status: 'error',
-          details: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          details: `出错：${error instanceof Error ? error.message : '未知错误'}`,
         });
       }
 
       setTimeout(() => {
         message.error(
-          `Failed to generate ${type}: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          `生成${type === 'playwright' ? ' Playwright 代码' : ' YAML'}失败：${error instanceof Error ? error.message : '未知错误'}`,
         );
       }, 2000);
     } finally {
@@ -636,13 +636,13 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
   // Copy generated test to clipboard
   const handleCopyTest = () => {
     navigator.clipboard.writeText(generatedTest);
-    message.success('Test copied to clipboard');
+    message.success('测试代码已复制到剪贴板');
   };
 
   // Copy generated YAML to clipboard
   const handleCopyYaml = () => {
     navigator.clipboard.writeText(generatedYaml);
-    message.success('YAML copied to clipboard');
+    message.success('YAML 已复制到剪贴板');
   };
 
   // Download generated test as a TypeScript file
@@ -660,9 +660,7 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
     link.click();
 
     URL.revokeObjectURL(url);
-    message.success(
-      `Playwright script for "${downloadSessionName}" downloaded successfully`,
-    );
+    message.success(`已下载「${downloadSessionName}」的 Playwright 脚本`);
   };
 
   // Download generated YAML as a YAML file
@@ -680,9 +678,7 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
     link.click();
 
     URL.revokeObjectURL(url);
-    message.success(
-      `YAML script for "${downloadSessionName}" downloaded successfully`,
-    );
+    message.success(`已下载「${downloadSessionName}」的 YAML 脚本`);
   };
 
   // Regenerate Playwright test
@@ -765,7 +761,7 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
       ),
       value: 'yaml' as const,
     },
-    { label: 'None', value: 'none' as const },
+    { label: '无', value: 'none' as const },
   ];
 
   const getStepIcon = (step: ProgressStep) => {
@@ -813,8 +809,8 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
     <>
       {eventsCount === 0 ? (
         <div className="text-center text-gray-400 py-5">
-          <div className="text-lg mb-2">No events to generate code from</div>
-          <div className="text-sm">Record some interactions first</div>
+          <div className="text-lg mb-2">没有可用于生成代码的事件</div>
+          <div className="text-sm">请先录制一些操作</div>
         </div>
       ) : (
         <>
@@ -849,8 +845,8 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
                       <Tooltip
                         title={
                           option.value === 'none'
-                            ? 'Click to set None as default (no auto-generation)'
-                            : 'Pin as default code generation type'
+                            ? '点击设为默认（不自动生成代码）'
+                            : '固定为默认的代码生成类型'
                         }
                       >
                         {defaultType === option.value ? (
@@ -893,14 +889,14 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
                 options={YAML_LANGUAGE_SUGGESTIONS.map((option) => ({
                   label:
                     option.value === 'auto'
-                      ? `Auto (${resolvedYamlLanguage})`
+                      ? `自动（${resolvedYamlLanguage}）`
                       : option.label,
                   value: option.value,
                 }))}
                 className="w-40"
                 size="middle"
                 disabled={isGenerating}
-                placeholder="Language"
+                placeholder="语言"
               />
             )}
             {(selectedType === 'playwright' || selectedType === 'yaml') &&
@@ -921,7 +917,7 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
                         ? !generatedTest
                         : !generatedYaml)
                     }
-                    title="Copy to clipboard"
+                    title="复制到剪贴板"
                   />
                   <Button
                     size="small"
@@ -933,7 +929,7 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
                     }
                     disabled={isGenerating || isStreaming}
                     className="!border-none !bg-none !shadow-none"
-                    title="Regenerate code"
+                    title="重新生成代码"
                   />
                   <Button
                     size="small"
@@ -952,8 +948,8 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
                     }
                     title={
                       selectedType === 'playwright'
-                        ? 'Download as .ts file'
-                        : 'Download as .yaml file'
+                        ? '下载为 .ts 文件'
+                        : '下载为 .yaml 文件'
                     }
                   />
                 </div>
@@ -961,19 +957,15 @@ export const ProgressModal: React.FC<ProgressModalProps> = ({
           </div>
           {selectedType === 'none' && (
             <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded text-yellow-800 text-sm">
-              <div className="font-semibold mb-1">
-                No Code Generation Selected
-              </div>
+              <div className="font-semibold mb-1">未选择代码生成类型</div>
               <div>
-                Selecting <b>None</b> means no code will be generated
-                automatically.
+                选择<b>「无」</b>表示不会自动生成代码。
               </div>
               <div className="mt-1">
-                To auto-generate <b>YAML</b> or <b>Playwright</b> code, set it
-                as the default (click the pin icon on the right).
+                如需自动生成 <b>YAML</b> 或 <b>Playwright</b>{' '}
+                代码，请将其设为默认（点击右侧的图钉图标）。
                 <br />
-                When you stop recording, the system will automatically generate
-                code for the default type.
+                停止录制后，系统会自动生成默认类型的代码。
               </div>
             </div>
           )}

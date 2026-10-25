@@ -37,18 +37,13 @@ function ExtensionWelcomeEmptyState() {
         description={
           <div className="extension-welcome-copy">
             <div className="extension-welcome-title">
-              Welcome to Midscene.js Playground!
+              欢迎使用后台批量操作机器人！
             </div>
             <p>
-              This is a panel for experimenting and testing Midscene.js
-              features. You can use natural language instructions to operate the
-              web page, such as clicking buttons, filling in forms, and querying
-              information.
+              在这里用大白话下指令，让它自己操作当前网页：点按钮、填表单、
+              读取页面上的信息。
             </p>
-            <p>
-              Please enter your instructions in the input box below to start
-              experiencing.
-            </p>
+            <p>在下方输入框写下你要做的事，就可以开始了。</p>
           </div>
         }
       />
@@ -124,7 +119,7 @@ export function BrowserExtensionPlayground({
         try {
           const agent = getAgent(forceSameTabNavigation);
           if (!agent) {
-            throw new Error('Please configure AI settings first');
+            throw new Error('请先在设置里配置模型');
           }
           return agent.page.screenshot();
         } catch (error) {
@@ -137,7 +132,7 @@ export function BrowserExtensionPlayground({
         try {
           const agent = getAgent(forceSameTabNavigation);
           if (!agent) {
-            throw new Error('Please configure AI settings first');
+            throw new Error('请先在设置里配置模型');
           }
           return agent.page.screenshot();
         } catch (error) {
@@ -190,8 +185,8 @@ export function BrowserExtensionPlayground({
         ),
       }}
       branding={{
-        title: 'Playground',
-        version: `${extensionVersion}(SDK v${__SDK_VERSION__})`,
+        title: '操作台',
+        version: `${extensionVersion}（SDK v${__SDK_VERSION__}）`,
       }}
       // Use the same compact execution-flow skin as Studio. The extension
       // keeps its own shell and controls, while this shared class normalizes

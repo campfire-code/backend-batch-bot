@@ -91,7 +91,7 @@ describe('Locate model configuration', () => {
         ...defaults,
         MIDSCENE_LOCATE_MODEL_NAME: 'incomplete',
       }).getModelConfig('locate'),
-    ).toThrow('intent=locate');
+    ).toThrow('用途：locate');
   });
 
   it('supports environment overrides and removing the Locate model', () => {

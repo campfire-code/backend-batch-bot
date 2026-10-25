@@ -42,9 +42,7 @@ export const EnvConfigReminder: React.FC<EnvConfigReminderProps> = ({
   return (
     <div className={`env-config-reminder ${className}`}>
       <ExclamationCircleFilled className="reminder-icon" />
-      <span className="reminder-text">
-        Please set up your environment variables before using.
-      </span>
+      <span className="reminder-text">使用前请先配置模型环境变量。</span>
       <EnvConfig
         agentOptions={agentOptions}
         configModalClassName={configModalClassName}

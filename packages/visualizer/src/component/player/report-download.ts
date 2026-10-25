@@ -59,14 +59,14 @@ export async function triggerReportDownload(
     | DocumentLike
     | undefined;
   if (!activeDocument) {
-    throw new Error('Report download requires a document context.');
+    throw new Error('下载报告需要在页面环境中进行。');
   }
 
   const activeUrl = (urlRef ?? (globalThis.URL as unknown)) as
     | UrlLike
     | undefined;
   if (!activeUrl?.createObjectURL || !activeUrl?.revokeObjectURL) {
-    throw new Error('Report download requires URL.createObjectURL support.');
+    throw new Error('下载报告需要浏览器支持 URL.createObjectURL。');
   }
 
   const createBlob =

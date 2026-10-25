@@ -1,4 +1,4 @@
-# 篝火：打 v*-campfire.* 标签时转发布上游官方安装包（流程定义在 campfire-code/toolkit-hub）
+# 篝火：打 v*-campfire.* 标签时，在 ubuntu 上从源码构建中文版 Chrome 插件并发布
 name: release
 on:
   push:
@@ -7,7 +7,47 @@ permissions:
   contents: write
 jobs:
   release:
-    uses: campfire-code/toolkit-hub/.github/workflows/mirror-release.yml@v1
-    with:
-      # 排除更新清单、blockmap、Studio 的 zip 重复包（保留 dmg / setup.exe 与浏览器插件 zip）、Linux 版
-      exclude: '\.(sig|json|yml|blockmap)$|^Source code|^midscene-studio-beta-.*\.zip$'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 启用 pnpm
+        run: corepack enable
+      - name: 安装依赖并构建各个包
+        # prepare 脚本会构建全部工作区包（含插件依赖的 core、shared、visualizer 等）
+        run: pnpm install --frozen-lockfile
+      - name: 构建并打包插件
+        run: pnpm --filter chrome-extension run build
+      - name: 整理产物
+        run: |
+          slug=$(jq -r .slug tool.json); version=$(jq -r .version tool.json)
+          [ "$GITHUB_REF_NAME" = "v$version" ] || { echo "::error::标签 $GITHUB_REF_NAME 与 tool.json 版本 $version 不一致"; exit 1; }
+          mkdir -p out
+          zips=(apps/chrome-extension/extension_output/*.zip)
+          [ "${#zips[@]}" -eq 1 ] || { echo "::error::应当只有一个插件 zip，实际 ${#zips[@]} 个"; exit 1; }
+          cp "${zips[0]}" "out/${slug}_${version}_chrome-extension.zip"
+          # 解压检查：清单文件必须在 zip 根目录
+          unzip -l "out/${slug}_${version}_chrome-extension.zip" | grep -q ' manifest.json$' || { echo "::error::zip 根目录没有 manifest.json"; exit 1; }
+          (cd out && sha256sum * > SHA256SUMS.txt)
+      - name: 发布
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          slug=$(jq -r .slug tool.json); name=$(jq -r .name tool.json); version=$(jq -r .version tool.json)
+          up=$(jq -r .upstream.repo tool.json); uptag=$(jq -r .upstream.tag tool.json)
+          cat > notes.md <<NOTES
+          ## ${name} ${version}
+
+          中文版 Chrome / Edge 浏览器插件，基于开源项目 [${up}](https://github.com/${up})（${uptag}），MIT 许可证。
+
+          ### 安装
+          1. 下载 \`${slug}_${version}_chrome-extension.zip\`，解压到一个固定文件夹（装好后不要删）。
+          2. 浏览器地址栏打开 \`chrome://extensions/\`（Edge 是 \`edge://extensions/\`），打开“开发者模式”。
+          3. 点“加载已解压的扩展程序”，选择刚才解压的文件夹。
+          4. 点工具栏的插件图标，在侧边栏里先填好自己的多模态大模型配置。
+
+          附 \`SHA256SUMS.txt\` 可核对文件完整性。
+          NOTES
+          gh release create "v$version" out/* --title "$name $version" --notes-file notes.md --latest

@@ -181,7 +181,7 @@ export default function Recorder() {
       });
       const fullSession = await loadSession(session.id);
       if (!fullSession) {
-        message.error('Session not found');
+        message.error('未找到该会话');
         return;
       }
       setCurrentSession(session.id);
@@ -235,7 +235,7 @@ export default function Recorder() {
           height: '200px',
         }}
       >
-        <div>Loading sessions...</div>
+        <div>会话加载中...</div>
       </div>
     );
   }

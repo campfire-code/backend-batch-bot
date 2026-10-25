@@ -78,8 +78,8 @@ describe('ConfigModal Agent options', () => {
 
   it('keeps verification failures compact on their own row', () => {
     expect(configModalComponent).not.toContain('Verify and Save Model');
-    expect(configModalComponent).toContain("'Verifying' : 'Verify'");
-    expect(configModalComponent).toContain('message="Verified"');
+    expect(configModalComponent).toContain("'验证中' : '验证'");
+    expect(configModalComponent).toContain('message="验证通过"');
     expect(configModalComponent).not.toContain('Test passed.');
     expect(configModalStyles).toContain(
       'grid-template-columns: minmax(0, 1fr) auto;',
@@ -113,8 +113,6 @@ describe('ConfigModal Agent options', () => {
     expect(configModalStyles).not.toContain("[data-theme='dark']");
     expect(configModalStyles).not.toContain('!important');
     expect(configModalStyles).not.toContain('.ant-modal-content');
-    expect(configModalComponent).toContain(
-      '<strong>locally in your browser</strong>',
-    );
+    expect(configModalComponent).toContain('<strong>你本机的浏览器里</strong>');
   });
 });

@@ -49,7 +49,7 @@ export class ModelConfigManager {
     );
     if (!defaultConfig) {
       throw new Error(
-        'Model configuration is incomplete: model name (MIDSCENE_MODEL_NAME) is required. See https://midscenejs.com/model-api-setup',
+        '模型配置不完整：必须填写模型名（MIDSCENE_MODEL_NAME）。详见 https://midscenejs.com/model-api-setup',
       );
     }
 
@@ -162,7 +162,7 @@ export class ModelConfigManager {
 
     if (!modelConfig.modelFamily) {
       throw new Error(
-        `${modelConfig.slot === 'locate' ? 'MIDSCENE_LOCATE_MODEL_FAMILY' : 'MIDSCENE_MODEL_FAMILY'} is not set to a multimodal model with UI localization, so element localization cannot be achieved. Check your model configuration. See https://midscenejs.com/model-api-setup`,
+        `${modelConfig.slot === 'locate' ? 'MIDSCENE_LOCATE_MODEL_FAMILY' : 'MIDSCENE_MODEL_FAMILY'} 没有设置为支持界面定位的多模态模型，无法定位页面元素。请检查模型配置。详见 https://midscenejs.com/model-api-setup`,
       );
     }
   }

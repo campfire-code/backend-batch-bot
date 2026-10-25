@@ -128,7 +128,7 @@ describe('VL Model Check for Different Interface Types', () => {
     });
 
     await expect(agent.getUIContext()).rejects.toThrow(
-      /MIDSCENE_MODEL_FAMILY is not set/,
+      /MIDSCENE_MODEL_FAMILY 没有设置为/,
     );
   });
 

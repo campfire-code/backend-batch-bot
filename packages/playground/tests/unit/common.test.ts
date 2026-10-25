@@ -43,16 +43,13 @@ describe('common utilities', () => {
     it('should format extension conflict error', () => {
       const error = { message: 'Something of different extension' };
       const result = formatErrorMessage(error);
-      expect(result).toContain('Conflicting extension detected');
-      expect(result).toContain('midscenejs.com');
+      expect(result).toContain('检测到冲突的浏览器扩展');
     });
 
     it('should format NOT_IMPLEMENTED_AS_DESIGNED error', () => {
       const error = { message: 'NOT_IMPLEMENTED_AS_DESIGNED error' };
       const result = formatErrorMessage(error);
-      expect(result).toBe(
-        'Further actions cannot be performed in the current environment',
-      );
+      expect(result).toBe('当前环境下无法继续执行后续操作');
     });
 
     it('should return original error message for other errors', () => {
@@ -64,12 +61,12 @@ describe('common utilities', () => {
     it('should handle errors without message', () => {
       const error = {};
       const result = formatErrorMessage(error);
-      expect(result).toBe('Unknown error');
+      expect(result).toBe('未知错误');
     });
 
     it('should handle null/undefined errors', () => {
-      expect(formatErrorMessage(null)).toBe('Unknown error');
-      expect(formatErrorMessage(undefined)).toBe('Unknown error');
+      expect(formatErrorMessage(null)).toBe('未知错误');
+      expect(formatErrorMessage(undefined)).toBe('未知错误');
     });
   });
 
@@ -79,7 +76,7 @@ describe('common utilities', () => {
       const result = validateStructuredParams(value, undefined);
 
       expect(result.valid).toBe(false);
-      expect(result.errorMessage).toBe('Parameters are required');
+      expect(result.errorMessage).toBe('缺少必填参数');
     });
 
     it('should return valid when no action schema exists', () => {
@@ -483,7 +480,7 @@ describe('common utilities', () => {
           },
           {},
         ),
-      ).rejects.toThrow('Unknown action type: customAction');
+      ).rejects.toThrow('未知的操作类型：customAction');
       expect(mockCustomAction).not.toHaveBeenCalled();
     });
 
@@ -497,7 +494,7 @@ describe('common utilities', () => {
 
       await expect(
         executeAction(activeAgent, 'unknownAction', [], value, options),
-      ).rejects.toThrow('Unknown action type: unknownAction');
+      ).rejects.toThrow('未知的操作类型：unknownAction');
     });
 
     it('should find action by interfaceAlias', async () => {

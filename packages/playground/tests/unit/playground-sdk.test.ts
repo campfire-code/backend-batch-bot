@@ -378,7 +378,7 @@ describe('PlaygroundSDK', () => {
       const result = await sdk.cancelTask('request-123');
 
       expect(result).toEqual({
-        error: 'Cancel task not supported in local execution mode',
+        error: '本地执行模式不支持取消任务',
       });
     });
 

@@ -61,9 +61,7 @@ describe('KeyboardPress Action', () => {
       agent.callActionInActionSpace('KeyboardPress', {
         keyName: 'Control+X',
       }),
-    ).rejects.toThrow(
-      'Model configuration is incomplete: model name (MIDSCENE_MODEL_NAME) is required',
-    );
+    ).rejects.toThrow('模型配置不完整：必须填写模型名（MIDSCENE_MODEL_NAME）');
   });
 
   it('keeps the legacy key-only signature working', async () => {

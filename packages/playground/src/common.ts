@@ -66,14 +66,14 @@ export const formatErrorMessage = (e: any): string => {
   const errorMessage = e?.message || '';
 
   if (errorMessage.includes('of different extension')) {
-    return 'Conflicting extension detected. Please disable the suspicious plugins and refresh the page. Guide: https://midscenejs.com/quick-start.html#chrome-extension-faq';
+    return '检测到冲突的浏览器扩展。请停用可疑的扩展并刷新页面。';
   }
 
   if (errorMessage.includes('NOT_IMPLEMENTED_AS_DESIGNED')) {
-    return 'Further actions cannot be performed in the current environment';
+    return '当前环境下无法继续执行后续操作';
   }
 
-  return errorMessage || 'Unknown error';
+  return errorMessage || '未知错误';
 };
 
 // Parse structured parameters for callActionInActionSpace
@@ -140,7 +140,7 @@ export function validateStructuredParams(
   action: DeviceAction<unknown> | undefined,
 ): ValidationResult {
   if (!value.params) {
-    return { valid: false, errorMessage: 'Parameters are required' };
+    return { valid: false, errorMessage: '缺少必填参数' };
   }
 
   if (!action?.paramSchema) {
@@ -184,15 +184,15 @@ export function validateStructuredParams(
       if (errorMessages.length > 0) {
         return {
           valid: false,
-          errorMessage: `Validation error: ${errorMessages.join(', ')}`,
+          errorMessage: `参数校验错误：${errorMessages.join('，')}`,
         };
       }
     } else {
       const errorMsg =
-        error instanceof Error ? error.message : 'Unknown validation error';
+        error instanceof Error ? error.message : '未知的参数校验错误';
       return {
         valid: false,
-        errorMessage: `Parameter validation failed: ${errorMsg}`,
+        errorMessage: `参数校验失败：${errorMsg}`,
       };
     }
   }
@@ -295,6 +295,6 @@ export async function executeAction(
       return await agentPromptAPI(prompt, optionsForAgent);
     }
 
-    throw new Error(`Unknown action type: ${actionType}`);
+    throw new Error(`未知的操作类型：${actionType}`);
   }
 }

@@ -18,7 +18,7 @@ export function SiwcLoginButton() {
         type: SIWC_LOGIN_MESSAGE,
       });
       if (!result?.success) {
-        throw new Error(result?.error ?? 'Unable to start SIWC authorization.');
+        throw new Error(result?.error ?? '无法发起 ChatGPT 登录授权。');
       }
       setConfirmationOpen(false);
     } catch (cause) {
@@ -36,14 +36,14 @@ export function SiwcLoginButton() {
         onClick={() => setConfirmationOpen(true)}
         style={{ height: 'auto', padding: 0 }}
       >
-        Use your ChatGPT plan →
+        使用你的 ChatGPT 订阅 →
       </Button>
       <Modal
-        title="Sign in with ChatGPT"
+        title="使用 ChatGPT 登录"
         open={confirmationOpen}
         width={420}
-        okText="Continue to ChatGPT"
-        cancelText="Cancel"
+        okText="前往 ChatGPT"
+        cancelText="取消"
         confirmLoading={pending}
         cancelButtonProps={{ disabled: pending }}
         closable={!pending}
@@ -56,18 +56,15 @@ export function SiwcLoginButton() {
         }}
       >
         <Typography.Paragraph>
-          Sign in with ChatGPT (SIWC) lets you use your ChatGPT plan in Midscene
-          without a separate OpenAI API Key. Model usage counts toward your
-          ChatGPT plan allowance.
+          使用 ChatGPT 登录后，可以直接用你的 ChatGPT 订阅来驱动 Midscene，
+          不需要另外申请 OpenAI 密钥。模型用量会计入你的 ChatGPT 订阅额度。
         </Typography.Paragraph>
         <Typography.Paragraph>
-          Authorization will open in a new tab. After signing in, follow the
-          instructions there, then return here and paste the configuration into
-          the Model Env Config field.
+          授权会在新标签页中打开。登录后按页面提示操作，然后回到这里，
+          把配置粘贴到“模型环境配置”输入框中。
         </Typography.Paragraph>
         <Typography.Paragraph>
-          Your credentials will be saved locally in this extension. Midscene
-          does not collect your credentials.
+          你的登录凭据只保存在本机的这个插件里，不会被收集或上传。
         </Typography.Paragraph>
         <Typography.Paragraph>
           <Typography.Link
@@ -75,7 +72,7 @@ export function SiwcLoginButton() {
             target="_blank"
             rel="noreferrer"
           >
-            Learn more about SIWC
+            了解更多
           </Typography.Link>
         </Typography.Paragraph>
         {error && <Alert type="error" showIcon message={error} />}

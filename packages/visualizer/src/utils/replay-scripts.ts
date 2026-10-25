@@ -667,10 +667,10 @@ export const generateAnimationScripts = (
     if (task.status !== 'finished') {
       errorStateFlag = true;
       const errorTitle = typeStr(task);
-      const errorMsg = task.errorMessage || 'unknown error';
+      const errorMsg = task.errorMessage || '未知错误';
       const errorSubTitle =
         errorMsg.indexOf('NOT_IMPLEMENTED_AS_DESIGNED') > 0
-          ? 'Further actions cannot be performed in the current environment'
+          ? '当前环境下无法继续执行后续操作'
           : errorMsg;
       const screenshot = task.recorder?.[task.recorder.length - 1]?.screenshot;
       const { width, height } = resolveTaskShotSize(
@@ -717,7 +717,7 @@ export const generateAnimationScripts = (
       : { width: imageWidth, height: imageHeight };
 
   scripts.push({
-    title: 'End',
+    title: '结束',
     subTitle: initSubTitle,
     type: 'img',
     duration: lastFrameDuration,

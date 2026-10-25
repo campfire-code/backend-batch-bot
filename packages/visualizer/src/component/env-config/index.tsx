@@ -88,7 +88,7 @@ export function EnvConfig({
               : undefined
         }
         placement={tooltipPlacement}
-        title="Please set up your environment variables before using."
+        title="使用前请先配置模型环境变量。"
       >
         {mode === 'icon' ? (
           <SettingOutlined onClick={showModal} />
@@ -97,7 +97,7 @@ export function EnvConfig({
             onClick={showModal}
             style={{ color: '#006AFF', cursor: 'pointer' }}
           >
-            set up
+            去设置
           </span>
         )}
       </Tooltip>
@@ -141,7 +141,7 @@ export function EnvConfig({
 
             if (rollbackErrors.length > 0) {
               throw new Error(
-                `Saving configuration failed and rollback was incomplete. Original error: ${String(error)}. Rollback errors: ${rollbackErrors.map(String).join('; ')}`,
+                `保存配置失败，且回滚不完整。原始错误：${String(error)}。回滚错误：${rollbackErrors.map(String).join('；')}`,
               );
             }
             throw error;

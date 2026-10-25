@@ -27,7 +27,7 @@ export function safeOverrideAIConfig(
     console.error('Failed to override AI config:', err);
 
     if (showErrorMessage) {
-      notifyError(err, { title: 'Failed to apply AI configuration' });
+      notifyError(err, { title: '应用模型配置失败' });
     }
 
     return false;

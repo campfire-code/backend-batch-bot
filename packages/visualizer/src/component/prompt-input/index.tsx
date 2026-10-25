@@ -29,6 +29,7 @@ import {
 import { getPromptInputActionLabel } from '../../utils/action-label';
 import { apiMetadata, defaultMainButtons } from '../../utils/constants';
 import { hasDeviceSpecificConfig } from '../../utils/device-capabilities';
+import { describeFieldInChinese } from '../../utils/field-description';
 import {
   actionNameForType,
   isRunButtonEnabled as calculateIsRunButtonEnabled,
@@ -47,6 +48,7 @@ import {
   NumberField,
   TextField,
 } from '../form-field';
+import { fieldLabelForKey } from '../form-field';
 import { HistorySelector } from '../history-selector';
 import './index.less';
 
@@ -293,25 +295,25 @@ export const PromptInput: React.FC<PromptInputProps> = ({
     () => [
       {
         key: 'interaction-group',
-        label: 'Interaction APIs',
+        label: '交互类操作',
         match: (api: string) =>
           apiMetadata[api as keyof typeof apiMetadata]?.group === 'interaction',
       },
       {
         key: 'extraction-group',
-        label: 'Data Extraction APIs',
+        label: '数据提取类操作',
         match: (api: string) =>
           apiMetadata[api as keyof typeof apiMetadata]?.group === 'extraction',
       },
       {
         key: 'validation-group',
-        label: 'Validation APIs',
+        label: '校验类操作',
         match: (api: string) =>
           apiMetadata[api as keyof typeof apiMetadata]?.group === 'validation',
       },
       {
         key: 'device-specific-group',
-        label: 'Device-Specific APIs',
+        label: '设备专属操作',
         match: (api: string) => !apiMetadata[api as keyof typeof apiMetadata],
       },
     ],
@@ -352,7 +354,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({
       items.push({
         key: 'primary-group',
         type: 'group',
-        label: 'Primary APIs',
+        label: '常用操作',
         children: primaryActions.map(buildApiMenuItem),
       });
     }
@@ -767,11 +769,11 @@ export const PromptInput: React.FC<PromptInputProps> = ({
 
             // Try to get description from the field schema
             if (fieldWithRuntime._def?.description) {
-              return fieldWithRuntime._def.description;
+              return describeFieldInChinese(fieldWithRuntime._def.description);
             }
 
             if (fieldWithRuntime.description) {
-              return fieldWithRuntime.description;
+              return describeFieldInChinese(fieldWithRuntime.description);
             }
 
             // Try to get from action's paramSchema directly
@@ -787,21 +789,21 @@ export const PromptInput: React.FC<PromptInputProps> = ({
                   {};
                 const fieldDef = shape[key];
                 if (fieldDef?._def?.description) {
-                  return fieldDef._def.description;
+                  return describeFieldInChinese(fieldDef._def.description);
                 }
                 if (fieldDef?.description) {
-                  return fieldDef.description;
+                  return describeFieldInChinese(fieldDef.description);
                 }
               }
             }
 
             // Fallback to default placeholders
             if (isLocateFieldFlag) {
-              return 'Describe the element you want to interact with';
+              return '描述想要操作的元素';
             } else {
-              if (key === 'keyName') return 'Enter key name or text to type';
-              if (key === 'value') return 'Enter text to input';
-              return `Enter ${key}`;
+              if (key === 'keyName') return '输入按键名称或要键入的文字';
+              if (key === 'value') return '输入要填写的文字';
+              return `请输入${key}`;
             }
           })();
 
@@ -839,7 +841,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({
           const fieldSchema = shape[key];
           const { actualField, isOptional } = unwrapZodType(fieldSchema);
           const isLocateFieldFlag = isLocateField(actualField);
-          const label = key.charAt(0).toUpperCase() + key.slice(1);
+          const label = fieldLabelForKey(key);
           const isRequired = !isOptional;
           const marginBottom = index === sortedKeys.length - 1 ? 0 : 12;
 
@@ -848,12 +850,12 @@ export const PromptInput: React.FC<PromptInputProps> = ({
             // Try to get placeholder from field description or other metadata
             const fieldWithRuntime = actualField as ZodRuntimeAccess;
             if (fieldWithRuntime._def?.description) {
-              return fieldWithRuntime._def.description;
+              return describeFieldInChinese(fieldWithRuntime._def.description);
             }
 
             // Try to get from field metadata/annotations
             if (fieldWithRuntime.description) {
-              return fieldWithRuntime.description;
+              return describeFieldInChinese(fieldWithRuntime.description);
             }
 
             // Try to get from action's paramSchema directly
@@ -869,17 +871,17 @@ export const PromptInput: React.FC<PromptInputProps> = ({
                     .shape || {};
                 const fieldDef = shape[key];
                 if (fieldDef?._def?.description) {
-                  return fieldDef._def.description;
+                  return describeFieldInChinese(fieldDef._def.description);
                 }
                 if (fieldDef?.description) {
-                  return fieldDef.description;
+                  return describeFieldInChinese(fieldDef.description);
                 }
               }
             }
 
             // For locate fields, provide a default placeholder
             if (isLocateFieldFlag) {
-              return 'Describe the element you want to interact with';
+              return '描述想要操作的元素';
             }
 
             return undefined;
@@ -983,11 +985,11 @@ export const PromptInput: React.FC<PromptInputProps> = ({
 
     if (dryMode) {
       return selectedType === 'aiAct' ? (
-        <Tooltip title="Start executing until some interaction actions need to be performed. You can see the process of planning and locating.">
-          {runButton('Dry Run')}
+        <Tooltip title="开始执行，直到需要进行交互操作为止，可以查看规划和定位的过程。">
+          {runButton('试运行')}
         </Tooltip>
       ) : (
-        runButton('Run')
+        runButton('运行')
       );
     }
 
@@ -999,12 +1001,12 @@ export const PromptInput: React.FC<PromptInputProps> = ({
           onClick={onStop}
           style={{ borderRadius: 20, zIndex: 999 }}
         >
-          Stop
+          停止
         </Button>
       );
     }
 
-    return runButton('Run');
+    return runButton('运行');
   }, [
     dryMode,
     loading,
@@ -1030,18 +1032,18 @@ export const PromptInput: React.FC<PromptInputProps> = ({
 
     if (dryMode) {
       return selectedType === 'aiAct' ? (
-        <Tooltip title="Start executing until some interaction actions need to be performed. You can see the process of planning and locating.">
-          {runButton('Dry run')}
+        <Tooltip title="开始执行，直到需要进行交互操作为止，可以查看规划和定位的过程。">
+          {runButton('试运行')}
         </Tooltip>
       ) : (
-        runButton('Run')
+        runButton('运行')
       );
     }
 
     if (stoppable) {
       return (
         <Button
-          aria-label="Stop running"
+          aria-label="停止运行"
           className="minimal-run-trigger minimal-run-trigger-stop prompt-stop-button"
           icon={<PromptStopSquareIcon />}
           onClick={onStop}
@@ -1049,7 +1051,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({
       );
     }
 
-    return runButton('Run');
+    return runButton('运行');
   }, [
     dryMode,
     loading,
@@ -1092,7 +1094,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({
           popupPlacement="topLeft"
           trigger={
             <button
-              aria-label="Open run configuration"
+              aria-label="打开运行配置"
               className="input-icon-trigger"
               type="button"
             >
@@ -1164,7 +1166,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({
     )
   ) : (
     <div className="no-input-method">
-      Click "Run" to execute {actionNameForType(selectedType)}
+      点击“运行”以执行{actionNameForType(selectedType)}
     </div>
   );
   if (isMinimalChrome) {
@@ -1192,7 +1194,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({
                 overlayClassName="more-apis-dropdown"
               >
                 <button
-                  aria-label={`Select action type (current: ${actionButtonLabel})`}
+                  aria-label={`选择操作类型（当前：${actionButtonLabel}）`}
                   className="minimal-action-trigger"
                   disabled={!runButtonEnabled}
                   type="button"
@@ -1228,7 +1230,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({
                 popupPlacement="top"
                 trigger={
                   <button
-                    aria-label="Open prompt history"
+                    aria-label="打开提示词历史记录"
                     className="minimal-icon-trigger"
                     type="button"
                   >
@@ -1269,7 +1271,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({
                     popupPlacement="topRight"
                     trigger={
                       <button
-                        aria-label="Open run configuration"
+                        aria-label="打开运行配置"
                         className="minimal-icon-trigger"
                         type="button"
                       >
@@ -1329,7 +1331,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({
             >
               {selectedType && !defaultMainButtons.includes(selectedType)
                 ? actionNameForType(selectedType)
-                : 'more'}
+                : '更多'}
               <DownOutlined style={{ fontSize: '10px', marginLeft: '2px' }} />
             </Button>
           </Dropdown>

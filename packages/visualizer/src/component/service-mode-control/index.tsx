@@ -14,13 +14,13 @@ interface ServiceModeControlProps {
 
 // Centralized text constants
 const TITLE_TEXT = {
-  Server: 'Server Status',
-  'In-Browser': 'In-Browser',
+  Server: '服务状态',
+  'In-Browser': '浏览器内模式',
 };
 
 const SWITCH_BUTTON_TEXT = {
-  Server: 'Switch to In-Browser Mode',
-  'In-Browser': 'Switch to Server Mode',
+  Server: '切换到浏览器内模式',
+  'In-Browser': '切换到服务端模式',
 };
 
 export const ServiceModeControl: React.FC<ServiceModeControlProps> = ({
@@ -33,13 +33,13 @@ export const ServiceModeControl: React.FC<ServiceModeControlProps> = ({
   const renderServerTip = () => {
     if (serverValid) {
       return (
-        <Tooltip title="Connected">
+        <Tooltip title="已连接">
           <div className="server-tip">{iconForStatus('connected')}</div>
         </Tooltip>
       );
     }
     return (
-      <Tooltip title="Connection failed">
+      <Tooltip title="连接失败">
         <div className="server-tip">{iconForStatus('failed')}</div>
       </Tooltip>
     );
@@ -54,9 +54,9 @@ export const ServiceModeControl: React.FC<ServiceModeControlProps> = ({
       <Tooltip
         title={
           <span>
-            Server Mode: send the request through the server <br />
-            In-Browser Mode: send the request through the browser fetch API (The
-            AI service should support CORS in this case)
+            服务端模式：通过服务端发送请求 <br />
+            浏览器内模式：通过浏览器的 fetch 接口发送请求（此时 AI
+            服务需要支持跨域访问）
           </span>
         }
       >
@@ -80,7 +80,7 @@ export const ServiceModeControl: React.FC<ServiceModeControlProps> = ({
         type: 'remote-execution',
       });
       playgroundSDK.overrideConfig(config).catch((error) => {
-        notifyError(error, { title: 'Failed to apply AI configuration' });
+        notifyError(error, { title: '应用 AI 配置失败' });
       });
     }
   }, [config, serviceMode, serverValid]);

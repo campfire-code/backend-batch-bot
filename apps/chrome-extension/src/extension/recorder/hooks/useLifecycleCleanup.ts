@@ -26,7 +26,7 @@ export const useLifecycleCleanup = (
       if (document.visibilityState === 'hidden' && isRecording) {
         recordLogger.info('Extension popup hidden, stopping recording');
         stopRecording().then(() => {
-          message.warning('Recording stopped - left extension popup');
+          message.warning('已离开插件窗口，录制已停止');
         });
       }
     };

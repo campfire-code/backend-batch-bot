@@ -78,7 +78,7 @@ describe('BasePlaygroundAdapter', () => {
 
       const result = adapter.validateParams(value, action);
       expect(result.valid).toBe(false);
-      expect(result.errorMessage).toBe('Parameters are required');
+      expect(result.errorMessage).toBe('缺少必填参数');
     });
 
     it('should validate successfully with valid params', () => {
@@ -192,7 +192,7 @@ describe('BasePlaygroundAdapter', () => {
 
       it('should return default message for no error', () => {
         const result = adapter.formatErrorMessage({});
-        expect(result).toBe('Unknown error');
+        expect(result).toBe('未知错误');
       });
     });
 

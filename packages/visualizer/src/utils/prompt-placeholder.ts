@@ -1,49 +1,49 @@
 // Get placeholder text based on run type
 export const getPlaceholderForType = (type: string): string => {
   if (type === 'aiQuery') {
-    return 'What do you want to query?';
+    return '想提取什么数据？';
   }
   if (type === 'aiAssert') {
-    return 'What do you want to assert?';
+    return '想断言什么条件？';
   }
   if (type === 'aiTap') {
-    return 'What element do you want to tap?';
+    return '想点击哪个元素？';
   }
   if (type === 'aiDoubleClick') {
-    return 'What element do you want to double-click?';
+    return '想双击哪个元素？';
   }
   if (type === 'aiHover') {
-    return 'What element do you want to hover over?';
+    return '想把鼠标悬停在哪个元素上？';
   }
   if (type === 'aiInput') {
-    return 'Format: <value> | <element>\nExample: hello world | search box';
+    return '格式：<要输入的内容> | <元素>\n示例：你好 | 搜索框';
   }
   if (type === 'aiRightClick') {
-    return 'What element do you want to right-click?';
+    return '想右键点击哪个元素？';
   }
   if (type === 'aiKeyboardPress') {
-    return 'Format: <key> | <element (optional)>\nExample: Enter | text field';
+    return '格式：<按键> | <元素（可选）>\n示例：Enter | 文本框';
   }
   if (type === 'aiScroll') {
-    return 'Format: <direction> <amount> | <element (optional)>\nExample: down 500 | main content';
+    return '格式：<方向> <距离> | <元素（可选）>\n示例：down 500 | 主要内容区';
   }
   if (type === 'aiLocate') {
-    return 'What element do you want to locate?';
+    return '想定位哪个元素？';
   }
   if (type === 'aiBoolean') {
-    return 'What do you want to check (returns true/false)?';
+    return '想检查什么（返回是/否）？';
   }
   if (type === 'aiNumber') {
-    return 'What number do you want to extract?';
+    return '想提取哪个数值？';
   }
   if (type === 'aiString') {
-    return 'What text do you want to extract?';
+    return '想提取哪段文字？';
   }
   if (type === 'aiAsk') {
-    return 'What do you want to ask?';
+    return '想问什么问题？';
   }
   if (type === 'aiWaitFor') {
-    return 'What condition do you want to wait for?';
+    return '想等待什么条件？';
   }
-  return 'What do you want to do?';
+  return '想做什么？';
 };

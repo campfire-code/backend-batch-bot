@@ -127,7 +127,7 @@ export class ExtensionBridgePageBrowserSide extends ChromeExtensionProxyPage {
           }
         }
 
-        this.onLogMessage(`bridge call from cli side: ${method}`, 'log');
+        this.onLogMessage(`收到命令行端的调用：${method}`, 'log');
         if (method === BridgeEvent.ConnectNewTabWithUrl) {
           return this.connectNewTabWithUrl.apply(
             this,
@@ -178,7 +178,7 @@ export class ExtensionBridgePageBrowserSide extends ChromeExtensionProxyPage {
         // and `getWaterFlowAnimationEnabled` are inherited from
         // ChromeExtensionProxyPage and found via `this[method]`.
         if (!this[method as keyof ChromeExtensionProxyPage]) {
-          this.onLogMessage(`method not found: ${method}`, 'log');
+          this.onLogMessage(`找不到方法：${method}`, 'log');
           return undefined;
         }
 
@@ -190,10 +190,7 @@ export class ExtensionBridgePageBrowserSide extends ChromeExtensionProxyPage {
           return result;
         } catch (e) {
           const errorMessage = e instanceof Error ? e.message : 'Unknown error';
-          this.onLogMessage(
-            `Error calling method: ${method}, ${errorMessage}`,
-            'log',
-          );
+          this.onLogMessage(`调用方法出错：${method}，${errorMessage}`, 'log');
           throw new Error(errorMessage, { cause: e });
         }
       },
@@ -206,13 +203,13 @@ export class ExtensionBridgePageBrowserSide extends ChromeExtensionProxyPage {
 
     // Show confirmation dialog after connection is established
     if (this.onConnectionRequest) {
-      this.onLogMessage('Waiting for user confirmation...', 'log');
+      this.onLogMessage('正在等待你确认连接……', 'log');
       const allowed = await this.onConnectionRequest();
       resolveConfirmationGate(allowed);
       this.confirmationPromise = null;
 
       if (!allowed) {
-        this.onLogMessage('Connection denied by user', 'log');
+        this.onLogMessage('你已拒绝本次连接', 'log');
         this.bridgeClient.disconnect();
         this.bridgeClient = null;
         throw new Error('Connection denied by user');
@@ -220,7 +217,7 @@ export class ExtensionBridgePageBrowserSide extends ChromeExtensionProxyPage {
     }
 
     this.onLogMessage(
-      `Bridge connected, cli-side version v${this.bridgeClient.serverVersion}, browser-side version v${__VERSION__}`,
+      `桥接已连接，命令行端版本 v${this.bridgeClient.serverVersion}，浏览器端版本 v${__VERSION__}`,
       'log',
     );
   }
@@ -250,7 +247,7 @@ export class ExtensionBridgePageBrowserSide extends ChromeExtensionProxyPage {
     assert(tabId, 'failed to get tabId after creating a new tab');
 
     // new tab
-    this.onLogMessage(`Creating new tab: ${url}`, 'log');
+    this.onLogMessage(`正在新建标签页：${url}`, 'log');
     this.newlyCreatedTabIds.push(tabId);
 
     if (options?.forceSameTabNavigation) {
@@ -283,7 +280,7 @@ export class ExtensionBridgePageBrowserSide extends ChromeExtensionProxyPage {
     const tabId = tabs[0]?.id;
     assert(tabId, 'failed to get tabId');
 
-    this.onLogMessage(`Connected to current tab: ${tabs[0]?.url}`, 'log');
+    this.onLogMessage(`已连接到当前标签页：${tabs[0]?.url}`, 'log');
 
     if (options?.forceSameTabNavigation) {
       this.forceSameTabNavigation = true;
@@ -298,7 +295,7 @@ export class ExtensionBridgePageBrowserSide extends ChromeExtensionProxyPage {
 
   async destroy() {
     if (this.destroyOptions?.closeTab && this.newlyCreatedTabIds.length > 0) {
-      this.onLogMessage('Closing all newly created tabs by bridge...', 'log');
+      this.onLogMessage('正在关闭桥接新建的标签页……', 'log');
       for (const tabId of this.newlyCreatedTabIds) {
         await chrome.tabs.remove(tabId);
       }

@@ -112,16 +112,14 @@ export default function ScreenshotViewer({
             setError(null); // Clear any previous errors
             setLastUpdateTime(Date.now());
           } else {
-            setError('Empty screenshot data received');
+            setError('收到的截图数据为空');
           }
         } else {
-          setError('No screenshot data in response');
+          setError('响应中没有截图数据');
         }
       } catch (err) {
         console.error('Screenshot fetch error:', err); // Debug log
-        setError(
-          err instanceof Error ? err.message : 'Failed to fetch screenshot',
-        );
+        setError(err instanceof Error ? err.message : '获取截图失败');
       } finally {
         setLoading(false);
       }
@@ -249,8 +247,8 @@ export default function ScreenshotViewer({
     return (
       <div className={`${rootClassName} offline`}>
         <div className="screenshot-placeholder">
-          <h3>📱 Screen Preview</h3>
-          <p>Start the playground server to see real-time screenshots</p>
+          <h3>📱 屏幕预览</h3>
+          <p>启动操作台服务后即可查看实时截图</p>
         </div>
       </div>
     );
@@ -260,7 +258,7 @@ export default function ScreenshotViewer({
     return (
       <div className={`${rootClassName} loading`}>
         <Spin size="large" />
-        <p>Loading screenshot...</p>
+        <p>截图加载中...</p>
       </div>
     );
   }
@@ -269,7 +267,7 @@ export default function ScreenshotViewer({
     return (
       <div className={`${rootClassName} error`}>
         <div className="screenshot-placeholder">
-          <h3>📱 Screen Preview</h3>
+          <h3>📱 屏幕预览</h3>
           <p className="error-message">{error}</p>
         </div>
       </div>
@@ -281,9 +279,9 @@ export default function ScreenshotViewer({
     const now = Date.now();
     const diff = Math.floor((now - timestamp) / 1000);
 
-    if (diff < 60) return `${diff}s ago`;
-    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-    return new Date(timestamp).toLocaleTimeString();
+    if (diff < 60) return `${diff} 秒前`;
+    if (diff < 3600) return `${Math.floor(diff / 60)} 分钟前`;
+    return new Date(timestamp).toLocaleTimeString('zh-CN');
   };
 
   const screenshotContent = (
@@ -298,7 +296,7 @@ export default function ScreenshotViewer({
                 ? mjpegUrl
                 : `${mjpegUrl}${mjpegUrl?.includes('?') ? '&' : '?'}_mjpegRetry=${encodeURIComponent(mjpegRetryToken)}`
             }
-            alt="Device Live Stream"
+            alt="设备实时画面"
             className="screenshot-image"
             onError={() => {
               // Server may have closed the polling fallback because the native
@@ -320,7 +318,7 @@ export default function ScreenshotViewer({
                 ? screenshot
                 : `data:image/png;base64,${screenshot}`
             }
-            alt="Device Screenshot"
+            alt="设备截图"
             className="screenshot-image"
             onLoad={() => console.log('Screenshot image loaded successfully')}
             onError={(e) => {
@@ -329,13 +327,13 @@ export default function ScreenshotViewer({
                 'Screenshot data preview:',
                 screenshot.substring(0, 100),
               );
-              setError('Failed to load screenshot image');
+              setError('截图图片加载失败');
             }}
           />
         </div>
       ) : (
         <div className="screenshot-placeholder">
-          <p>No screenshot available</p>
+          <p>暂无截图</p>
         </div>
       )}
     </div>
@@ -349,13 +347,13 @@ export default function ScreenshotViewer({
     <div className={rootClassName}>
       <div className="screenshot-header">
         <div className="screenshot-title">
-          <h3>{interfaceInfo?.type ? interfaceInfo.type : 'Device Name'}</h3>
+          <h3>{interfaceInfo?.type ? interfaceInfo.type : '设备名称'}</h3>
         </div>
       </div>
       <div className="screenshot-container">
         <div className="screenshot-overlay">
           <div className="device-name-overlay">
-            Device Name
+            设备名称
             <Tooltip title={interfaceInfo?.description}>
               <InfoCircleOutlined size={16} className="info-icon" />
             </Tooltip>
@@ -364,10 +362,10 @@ export default function ScreenshotViewer({
             <div className="screenshot-controls">
               {lastUpdateTime > 0 && (
                 <span className="last-update-time">
-                  Last updated {formatLastUpdateTime(lastUpdateTime)}
+                  最后更新：{formatLastUpdateTime(lastUpdateTime)}
                 </span>
               )}
-              <Tooltip title="Refresh screenshot">
+              <Tooltip title="刷新截图">
                 <Button
                   icon={<ReloadOutlined />}
                   onClick={handleManualRefresh}
@@ -377,7 +375,7 @@ export default function ScreenshotViewer({
               </Tooltip>
               {isUserOperating && (
                 <span className="operation-indicator">
-                  <Spin size="small" /> Operating...
+                  <Spin size="small" /> 操作中...
                 </span>
               )}
             </div>

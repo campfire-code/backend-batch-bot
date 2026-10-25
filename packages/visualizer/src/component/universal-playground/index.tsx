@@ -61,8 +61,8 @@ function getSDKId(sdk: any): string {
 
 function ErrorMessage({ error }: { error: string }) {
   if (!error) return null;
-  // Ensure only one "Error: " prefix and style it red
-  const cleanError = error.replace(/^(Error:\s*)+/, 'Error: ');
+  // Ensure only one error prefix and style it red
+  const cleanError = error.replace(/^(Error:\s*)+/, '出错：');
   return (
     <Alert
       message={<span style={{ color: '#ff4d4f' }}>{cleanError}</span>}
@@ -307,7 +307,7 @@ export function UniversalPlayground({
       playgroundSDK.overrideConfig(config).catch((error) => {
         console.error('Failed to override SDK config:', error);
         if (!componentConfig.suppressConfigErrorToast) {
-          notifyError(error, { title: 'Failed to apply AI configuration' });
+          notifyError(error, { title: '应用 AI 配置失败' });
         }
       });
     }
@@ -320,7 +320,7 @@ export function UniversalPlayground({
       await prepareExecution();
       await executeAction(value);
     } catch (error) {
-      notifyError(error, { title: 'Execution failed' });
+      notifyError(error, { title: '执行失败' });
     }
   }, [form, executeAction, prepareExecution]);
 
@@ -359,7 +359,7 @@ export function UniversalPlayground({
           : {}),
       });
     })().catch((error) => {
-      notifyError(error, { title: 'Execution failed' });
+      notifyError(error, { title: '执行失败' });
     });
   }, [
     componentConfig.externalRunRequest,
@@ -399,7 +399,7 @@ export function UniversalPlayground({
   const deviceType = componentConfig.deviceType;
   const executionFlowConfig = componentConfig.executionFlow ?? {};
   const collapsibleProgressGroup = executionFlowConfig.collapsible === true;
-  const progressGroupLabel = executionFlowConfig.label ?? 'Execution Flow';
+  const progressGroupLabel = executionFlowConfig.label ?? '执行流程';
 
   // Collapse state for progress groups, keyed by the id of the first progress
   // item of each run. A run is a maximal sequence of consecutive `progress`
@@ -760,7 +760,7 @@ export function UniversalPlayground({
                                     style={{ fontSize: 20 }}
                                   />
                                   <span className="system-message-title">
-                                    {branding.title || 'Playground'}
+                                    {branding.title || '操作台'}
                                   </span>
                                 </div>
                               )}
@@ -823,7 +823,7 @@ export function UniversalPlayground({
                 showScrollToBottomButton &&
                 componentConfig.enableScrollToBottom !== false && (
                   <Button
-                    aria-label="Scroll to latest message"
+                    aria-label="滚动到最新消息"
                     className="scroll-to-bottom-button"
                     shape="circle"
                     icon={<ArrowDownOutlined />}
@@ -843,9 +843,7 @@ export function UniversalPlayground({
         {/* Version Info Section */}
         {showVersionInfo && branding.version && (
           <div className="version-info-section">
-            <span className="version-text">
-              Midscene.js version: {branding.version}
-            </span>
+            <span className="version-text">版本：{branding.version}</span>
           </div>
         )}
       </Form>

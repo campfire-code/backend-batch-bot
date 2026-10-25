@@ -84,13 +84,13 @@ export const PlaygroundResultView: React.FC<PlaygroundResultProps> = ({
         <div className="combined-result-layout">
           <div style={{ flex: '0 0 auto', maxHeight: '40%', overflow: 'auto' }}>
             <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>
-              Error:
+              出错：
             </div>
             {errorNode}
           </div>
           <div className="combined-result-section">
             <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>
-              Report:
+              报告：
             </div>
             <div className="combined-result-player">
               <Player
@@ -135,11 +135,11 @@ export const PlaygroundResultView: React.FC<PlaygroundResultProps> = ({
     resultDataToShow = (
       <div className="combined-result-layout">
         <div style={{ flex: '0 0 auto' }}>
-          <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>Output:</div>
+          <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>输出：</div>
           {resultOutput}
         </div>
         <div className="combined-result-section">
-          <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>Report:</div>
+          <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>报告：</div>
           <div className="combined-result-player">
             <Player
               key={replayCounter}
@@ -199,11 +199,11 @@ export const PlaygroundResultView: React.FC<PlaygroundResultProps> = ({
     resultDataToShow = (
       <div className="combined-result-layout">
         <div style={{ flex: '0 0 auto' }}>
-          <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>Output:</div>
+          <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>输出：</div>
           {resultOutput}
         </div>
         <div className="combined-result-section">
-          <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>Report:</div>
+          <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>报告：</div>
           <div className="combined-result-player">
             <Player
               key={replayCounter}

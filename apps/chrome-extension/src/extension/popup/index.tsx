@@ -15,6 +15,7 @@ import {
   useEnvConfig,
 } from '@midscene/visualizer';
 import { App as AntdApp, ConfigProvider, Dropdown, theme } from 'antd';
+import zhCN from 'antd/locale/zh_CN';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BrowserExtensionPlayground } from '../../components/playground';
 import Bridge from '../bridge';
@@ -187,7 +188,7 @@ export function PlaygroundPopup() {
     {
       key: 'playground',
       icon: <SendOutlined />,
-      label: 'Playground',
+      label: '操作台',
       onClick: () => {
         setCurrentMode('playground');
         setPopupTab('playground');
@@ -196,7 +197,7 @@ export function PlaygroundPopup() {
     },
     {
       key: 'recorder',
-      label: 'Recorder (Preview)',
+      label: '录制器（预览版）',
       icon: <VideoCameraOutlined />,
       onClick: () => {
         setCurrentMode('recorder');
@@ -207,7 +208,7 @@ export function PlaygroundPopup() {
     {
       key: 'bridge',
       icon: <ApiOutlined />,
-      label: 'Bridge Mode',
+      label: '桥接模式',
       onClick: () => {
         setCurrentMode('bridge');
         setPopupTab('bridge');
@@ -259,7 +260,7 @@ export function PlaygroundPopup() {
   };
 
   return (
-    <ConfigProvider theme={antdThemeConfig}>
+    <ConfigProvider locale={zhCN} theme={antdThemeConfig}>
       <AntdApp component={false}>
         <div className="popup-wrapper">
           {/* top navigation bar */}
@@ -275,10 +276,10 @@ export function PlaygroundPopup() {
               </Dropdown>
               <span className="nav-title">
                 {currentMode === 'playground'
-                  ? 'Playground'
+                  ? '操作台'
                   : currentMode === 'recorder'
-                    ? 'Recorder'
-                    : 'Bridge Mode'}
+                    ? '录制器'
+                    : '桥接模式'}
               </span>
             </div>
             <div className="nav-right">

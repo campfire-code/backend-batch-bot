@@ -475,7 +475,7 @@ describe('usePlaygroundExecution stop handling', () => {
     const renderedText = getSnapshot()
       .infoList.map((item) => `${item.content} ${item.result?.error ?? ''}`)
       .join('\n');
-    expect(renderedText).toContain('Operation stopped');
+    expect(renderedText).toContain('操作已停止');
     expect(renderedText).not.toContain('Request was aborted');
     expect(
       getSnapshot().infoList.some(
@@ -548,7 +548,7 @@ describe('usePlaygroundExecution stop handling', () => {
       .infoList.map((item) => `${item.content} ${item.result?.error ?? ''}`)
       .join('\n');
     expect(renderedText).not.toContain('Request was aborted');
-    expect(renderedText).not.toContain('Operation stopped');
+    expect(renderedText).not.toContain('操作已停止');
     expect(
       getSnapshot().infoList.some(
         (item) => item.type === 'result' && item.result?.error,

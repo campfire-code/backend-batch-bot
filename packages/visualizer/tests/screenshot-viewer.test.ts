@@ -65,7 +65,7 @@ describe('ScreenshotViewer', () => {
     });
 
     const initialImage = container.querySelector(
-      'img[alt="Device Live Stream"]',
+      'img[alt="设备实时画面"]',
     ) as HTMLImageElement | null;
     // Every mount now seeds a per-mount cache-buster so the Electron
     // renderer can't reuse a dead multipart connection for the same URL.
@@ -78,7 +78,7 @@ describe('ScreenshotViewer', () => {
     });
 
     const retriedImage = container.querySelector(
-      'img[alt="Device Live Stream"]',
+      'img[alt="设备实时画面"]',
     ) as HTMLImageElement | null;
     expect(retriedImage?.src).toContain('_mjpegRetry=');
     expect(retriedImage?.src).not.toBe(initialSrc);
@@ -107,7 +107,7 @@ describe('ScreenshotViewer', () => {
     });
 
     const loadedImage = container.querySelector(
-      'img[alt="Device Live Stream"]',
+      'img[alt="设备实时画面"]',
     ) as HTMLImageElement;
     const initialSrc = loadedImage.src;
 
@@ -125,11 +125,8 @@ describe('ScreenshotViewer', () => {
     });
 
     expect(
-      (
-        container.querySelector(
-          'img[alt="Device Live Stream"]',
-        ) as HTMLImageElement
-      ).src,
+      (container.querySelector('img[alt="设备实时画面"]') as HTMLImageElement)
+        .src,
     ).toBe(initialSrc);
 
     Object.defineProperty(loadedImage, 'naturalWidth', {
@@ -146,7 +143,7 @@ describe('ScreenshotViewer', () => {
     });
 
     const retriedImage = container.querySelector(
-      'img[alt="Device Live Stream"]',
+      'img[alt="设备实时画面"]',
     ) as HTMLImageElement;
     expect(retriedImage.src).toContain('_mjpegRetry=');
     expect(retriedImage.src).not.toBe(initialSrc);

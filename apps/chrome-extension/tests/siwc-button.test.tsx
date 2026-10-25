@@ -24,16 +24,15 @@ for (const confirmed of [false, true]) {
     await act(async () => container.querySelector('button')!.click());
     expect(sendMessage).not.toHaveBeenCalled();
     const dialog = document.querySelector('[role="dialog"]')!;
-    expect(dialog.textContent).toContain('ChatGPT plan allowance');
-    expect(dialog.textContent).toContain(
-      'Authorization will open in a new tab.',
-    );
+    expect(dialog.textContent).toContain('ChatGPT 订阅额度');
+    expect(dialog.textContent).toContain('授权会在新标签页中打开。');
     expect(dialog.querySelector('a')?.href).toBe(
       'https://midscenejs.com/chatgpt-subscription.html',
     );
     const action = Array.from(dialog.querySelectorAll('button')).find(
       (button) =>
-        button.textContent === (confirmed ? 'Continue to ChatGPT' : 'Cancel'),
+        button.textContent?.replace(/\s/g, '') ===
+        (confirmed ? '前往ChatGPT' : '取消'),
     )!;
     await act(async () => action.click());
     expect(sendMessage).toHaveBeenCalledTimes(confirmed ? 1 : 0);

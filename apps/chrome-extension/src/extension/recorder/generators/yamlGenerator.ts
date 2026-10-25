@@ -83,7 +83,7 @@ export const exportEventsToYaml = async (
       events,
       {
         testName: sessionName,
-        description: `Test session recorded on ${new Date().toLocaleDateString()}`,
+        description: `录制于 ${new Date().toLocaleDateString('zh-CN')} 的测试会话`,
         ...options,
       },
       modelConfig,

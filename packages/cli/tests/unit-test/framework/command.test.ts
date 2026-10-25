@@ -666,7 +666,7 @@ export function defineYamlCaseTest(test: any, options: any) {
     const framework = join(root, 'framework.ts');
     const previousRunDir = process.env.MIDSCENE_RUN_DIR;
     const failureMessage =
-      'Model configuration is incomplete: model name (MIDSCENE_MODEL_NAME) is required.';
+      '模型配置不完整：必须填写模型名（MIDSCENE_MODEL_NAME）。';
 
     process.env.MIDSCENE_RUN_DIR = runDir;
     writeFileSync(yaml, 'web:\n  url: https://file.example\ntasks: []\n');
@@ -905,7 +905,7 @@ export function defineYamlCaseTest(test: any, options: any) {
     const framework = join(root, 'framework.ts');
     const previousRunDir = process.env.MIDSCENE_RUN_DIR;
     const failureMessage =
-      'Model configuration is incomplete: model name (MIDSCENE_MODEL_NAME) is required.';
+      '模型配置不完整：必须填写模型名（MIDSCENE_MODEL_NAME）。';
 
     process.env.MIDSCENE_RUN_DIR = runDir;
     writeFileSync(yamlA, 'web:\n  url: about:blank\ntasks: []\n');

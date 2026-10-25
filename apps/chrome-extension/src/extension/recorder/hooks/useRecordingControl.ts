@@ -74,7 +74,7 @@ export const useRecordingControl = (
 
         if (!currentTab?.id) {
           recordLogger.error('No active tab found for stopping recording');
-          message.error('No active tab found');
+          message.error('未找到当前标签页');
           return;
         }
 
@@ -132,7 +132,7 @@ export const useRecordingControl = (
                   eventsCount: events.length,
                 });
                 const hideLoadingMessage = message.loading(
-                  'Generating recording title and description...',
+                  '正在生成录制标题和描述...',
                   0,
                 );
                 try {
@@ -164,7 +164,7 @@ export const useRecordingControl = (
           }
         } catch (error) {
           recordLogger.error('Failed to stop recording', undefined, error);
-          message.error(`Failed to stop recording: ${error}`);
+          message.error(`停止录制失败：${error}`);
           // Still stop recording on our side even if there was an error
           await setIsRecording(false);
         }
@@ -196,9 +196,7 @@ export const useRecordingControl = (
 
               if (!isExtensionMode) {
                 recordLogger.error('Not in extension environment');
-                message.error(
-                  'Recording is only available in Chrome extension environment',
-                );
+                message.error('录制功能仅在 Chrome 插件环境中可用');
                 return;
               }
 
@@ -208,7 +206,7 @@ export const useRecordingControl = (
                 recordLogger.error('Specified session not found', {
                   sessionId,
                 });
-                message.error('Specified session not found');
+                message.error('未找到指定的会话');
                 return;
               }
 
@@ -216,7 +214,7 @@ export const useRecordingControl = (
                 recordLogger.error(
                   'No active tab found for starting recording',
                 );
-                message.error('No active tab found');
+                message.error('未找到当前标签页');
                 return;
               }
 
@@ -262,7 +260,7 @@ export const useRecordingControl = (
                 // Load existing events for continuation
                 setEvents(sessionToUse.events);
               }
-              message.success('Recording started');
+              message.success('已开始录制');
             })(),
             `recording startup at ${startStage}`,
             START_RECORDING_TIMEOUT_MS,
@@ -274,7 +272,7 @@ export const useRecordingControl = (
             error,
           );
           message.error(
-            'Failed to start recording. Please ensure you are on a regular web page (not Chrome internal pages) and try again.',
+            '开始录制失败。请确认当前是普通网页（不是 Chrome 内部页面）后重试。',
           );
         } finally {
           setIsStarting(false);
@@ -345,7 +343,7 @@ export const useRecordingControl = (
   // Export current events
   const exportEvents = useCallback(() => {
     if (events.length === 0) {
-      message.warning('No events to export');
+      message.warning('没有可导出的事件');
       return;
     }
 

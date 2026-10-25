@@ -111,9 +111,7 @@ export const getInlineStructuredFieldConfig = (
   const placeholder =
     (actualField as ZodRuntimeAccess)._def?.description ||
     (actualField as ZodRuntimeAccess).description ||
-    (isLocate
-      ? 'Describe the element you want to interact with'
-      : `Enter ${name}`);
+    (isLocate ? '描述想要操作的元素' : `请输入${name}`);
 
   return {
     name,

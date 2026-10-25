@@ -186,7 +186,7 @@ export class PlaygroundSDK {
     if (this.adapter instanceof RemoteExecutionAdapter) {
       return this.adapter.cancelTask(requestId);
     }
-    return { error: 'Cancel task not supported in local execution mode' };
+    return { error: '本地执行模式不支持取消任务' };
   }
 
   // Dump update callback management
@@ -270,7 +270,7 @@ export class PlaygroundSDK {
     if (this.adapter instanceof RemoteExecutionAdapter) {
       return this.adapter.interact(payload);
     }
-    return { ok: false, error: 'Direct interaction requires remote execution' };
+    return { ok: false, error: '直接交互需要使用远程执行' };
   }
 
   async startRecorderSession(
@@ -409,7 +409,7 @@ export class PlaygroundSDK {
       return this.adapter.createSession(input);
     }
 
-    throw new Error('Session creation is only supported in server mode');
+    throw new Error('只有服务模式支持创建会话');
   }
 
   async destroySession(): Promise<{
@@ -420,7 +420,7 @@ export class PlaygroundSDK {
       return this.adapter.destroySession();
     }
 
-    throw new Error('Session destruction is only supported in server mode');
+    throw new Error('只有服务模式支持销毁会话');
   }
 
   // Get service mode based on adapter type

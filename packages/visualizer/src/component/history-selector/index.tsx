@@ -48,12 +48,12 @@ export const HistorySelector: React.FC<HistorySelectorProps> = ({
   currentType,
   trigger,
   popupPlacement = 'bottom',
-  title = 'History',
+  title = '历史记录',
   showClear = true,
   onClear,
-  searchPlaceholder = 'Search',
-  emptyText = 'No history record',
-  noMatchText = 'No matching history record',
+  searchPlaceholder = '搜索',
+  emptyText = '暂无历史记录',
+  noMatchText = '没有匹配的历史记录',
   renderItemActions,
   renderItemLabel,
   overlayClassName,
@@ -294,7 +294,7 @@ export const HistorySelector: React.FC<HistorySelectorProps> = ({
                       className="clear-button"
                       disabled={history.length === 0}
                     >
-                      Clear
+                      清空
                     </Button>
                   ) : null}
                 </div>
@@ -315,14 +315,14 @@ export const HistorySelector: React.FC<HistorySelectorProps> = ({
                 ) : (
                   <>
                     {renderHistoryGroup(
-                      'Last 7 days',
+                      '最近 7 天',
                       groupedHistory.recent7Days,
                     )}
                     {renderHistoryGroup(
-                      'Last 1 year',
+                      '最近 1 年',
                       groupedHistory.recent1Year,
                     )}
-                    {renderHistoryGroup('Earlier', groupedHistory.older)}
+                    {renderHistoryGroup('更早', groupedHistory.older)}
 
                     {/* no search result */}
                     {searchText &&

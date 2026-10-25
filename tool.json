@@ -2,9 +2,13 @@
   "id": "a02",
   "slug": "backend-batch-bot",
   "name": "后台批量操作机器人",
-  "version": "1.17.0-campfire.1",
+  "version": "1.17.0-campfire.2",
   "repo": "campfire-code/backend-batch-bot",
   "license": "MIT",
   "delivery": "mirror",
-  "upstream": { "repo": "web-infra-dev/midscene", "license": "MIT", "tag": "v1.17.0" }
+  "upstream": {
+    "repo": "web-infra-dev/midscene",
+    "license": "MIT",
+    "tag": "v1.17.0"
+  }
 }

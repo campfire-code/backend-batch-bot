@@ -35,7 +35,7 @@ describe('Local execution cancellation recovery with real Agents', () => {
       const adapter = new LocalExecutionAdapter(previous, factory);
       try {
         const cancelled = await adapter.cancelTask('cancelled');
-        expect(cancelled.error).toBe(`Failed to cancel: ${error.message}`);
+        expect(cancelled.error).toBe(`取消失败：${error.message}`);
         expect(cancelled.reportHTML).toBe('previous report');
         expect(previous.destroyed).toBe(true);
         await expect(previous.resetDump()).rejects.toThrow('destroyed Agent');

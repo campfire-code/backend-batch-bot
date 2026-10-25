@@ -32,6 +32,12 @@ interface BridgeMessageRecord {
   msgType: 'log' | 'status';
 }
 
+const BRIDGE_STATUS_TEXT: Record<string, string> = {
+  closed: '已停止',
+  listening: '正在等待连接',
+  connected: '已连接',
+  disconnected: '连接已断开',
+};
 const BRIDGE_SERVER_URL_KEY = 'midscene-bridge-server-url';
 const DEFAULT_SERVER_URL = 'ws://127.0.0.1:3766';
 
@@ -145,7 +151,9 @@ export default function Bridge() {
         console.log('Bridge status changed:', message.status);
         setBridgeStatus(message.status);
         if (message.status !== 'connected') {
-          appendBridgeMessage(`Bridge status changed to ${message.status}`);
+          appendBridgeMessage(
+            `桥接状态已变为：${BRIDGE_STATUS_TEXT[message.status] ?? message.status}`,
+          );
         }
       } else if (message.type === workerMessageTypes.BRIDGE_MESSAGE) {
         appendBridgeMessage(message.message);
@@ -326,7 +334,7 @@ export default function Bridge() {
   let statusTip: string;
   if (bridgeStatus === 'closed') {
     statusIcon = iconForStatus('failed');
-    statusTip = 'Stopped';
+    statusTip = '已停止';
   } else if (bridgeStatus === 'listening' || bridgeStatus === 'disconnected') {
     statusIcon = (
       <Spin
@@ -335,13 +343,13 @@ export default function Bridge() {
         size="small"
       />
     );
-    statusTip = 'Listening for connection';
+    statusTip = '正在等待连接';
   } else if (bridgeStatus === 'connected') {
     statusIcon = iconForStatus('connected');
-    statusTip = 'Connected';
+    statusTip = '已连接';
   } else {
     statusIcon = iconForStatus('failed');
-    statusTip = `Unknown Status - ${bridgeStatus}`;
+    statusTip = `未知状态 - ${bridgeStatus}`;
   }
 
   return (
@@ -352,9 +360,9 @@ export default function Bridge() {
         <div className="middle-dialog-area">
           {messageList.length > 0 && (
             <div className="clear-button-container">
-              <Tooltip title="Clear Bridge activity">
+              <Tooltip title="清空桥接记录">
                 <Button
-                  aria-label="Clear Bridge activity"
+                  aria-label="清空桥接记录"
                   size="small"
                   icon={<ClearOutlined />}
                   onClick={clearMessageList}
@@ -369,18 +377,17 @@ export default function Bridge() {
               <div className="mode-icon">
                 <ApiOutlined style={{ fontSize: '12px' }} />
               </div>
-              <h2 className="mode-title">Bridge Mode</h2>
+              <h2 className="mode-title">桥接模式</h2>
             </div>
             <p className="bridge-mode-description">
-              In Bridge Mode, you can control this browser by the Midscene SDK
-              running in the local terminal. This is useful for interacting both
-              through scripts and manually, or to reuse cookies.{' '}
+              桥接模式下，可以由本机终端里运行的 Midscene SDK 来控制这个浏览器，
+              适合脚本和手动操作配合使用，或复用已登录的 Cookie。{' '}
               <a
                 href="https://www.midscenejs.com/bridge-mode-by-chrome-extension"
                 target="_blank"
                 rel="noreferrer"
               >
-                More about bridge mode
+                了解桥接模式
               </a>
             </p>
             {/* Server Configuration */}
@@ -395,7 +402,7 @@ export default function Bridge() {
                   className={`server-config-arrow ${isServerConfigExpanded ? 'expanded' : ''}`}
                 />
                 <span className="server-config-title">
-                  Use remote server (optional)
+                  使用远程服务（可选）
                 </span>
               </div>
               {isServerConfigExpanded && (
@@ -409,9 +416,9 @@ export default function Bridge() {
                   />
                   <small className="server-config-hint">
                     {serverUrl && serverUrl !== DEFAULT_SERVER_URL ? (
-                      <>Remote mode: Connect to {serverUrl}</>
+                      <>远程模式：连接到 {serverUrl}</>
                     ) : (
-                      <>Local mode (default): ws://127.0.0.1:3766</>
+                      <>本地模式（默认）：ws://127.0.0.1:3766</>
                     )}
                   </small>
                 </div>
@@ -428,7 +435,7 @@ export default function Bridge() {
                         <div className="mode-icon">
                           <ApiOutlined style={{ fontSize: '12px' }} />
                         </div>
-                        <span className="mode-title">Bridge Mode</span>
+                        <span className="mode-title">桥接模式</span>
                       </div>
                       <div className="system-message-content">
                         <div className="message-body">
@@ -462,9 +469,7 @@ export default function Bridge() {
         {(alwaysAllow || alwaysDecline) && (
           <div className="permission-info-container">
             <span className="permission-info-text">
-              {alwaysAllow
-                ? 'Auto-allow is enabled'
-                : 'Auto-decline is enabled'}
+              {alwaysAllow ? '已开启自动允许' : '已开启自动拒绝'}
             </span>
             <Button
               type="link"
@@ -472,7 +477,7 @@ export default function Bridge() {
               onClick={handleResetPermission}
               className="reset-permission-btn"
             >
-              Reset
+              重置
             </Button>
           </div>
         )}
@@ -491,7 +496,7 @@ export default function Bridge() {
             }
             onClick={handleToggleBridge}
           >
-            {isBridgeActive ? 'Stop' : 'Start'}
+            {isBridgeActive ? '停止' : '开始'}
           </Button>
         </div>
       </div>

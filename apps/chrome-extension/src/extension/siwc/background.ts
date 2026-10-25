@@ -14,7 +14,7 @@ const busy = { value: false };
 
 export async function startSiwcLogin() {
   if (busy.value) {
-    throw new Error('SIWC authorization is already in progress.');
+    throw new Error('ChatGPT 授权正在进行中。');
   }
   busy.value = true;
   try {
@@ -26,9 +26,7 @@ export async function startSiwcLogin() {
       ['waiting', 'exchanging'].includes(existing.status) &&
       existing.attempt.expiresAt > Date.now()
     ) {
-      throw new Error(
-        'SIWC authorization is already in progress. Finish or close its tab first.',
-      );
+      throw new Error('ChatGPT 授权正在进行中，请先完成或关闭对应的标签页。');
     }
     const saved = await chrome.storage.local.get([
       HOST_KEY,
@@ -39,7 +37,7 @@ export async function startSiwcLogin() {
     // Create the tab first so its ID is persisted before authorization starts.
     const tab = await chrome.tabs.create({ url: 'about:blank', active: false });
     if (tab.id === undefined) {
-      throw new Error('Unable to create the SIWC authorization tab.');
+      throw new Error('无法创建 ChatGPT 授权标签页。');
     }
     const tabId = tab.id;
     try {
@@ -161,7 +159,7 @@ export function registerSiwcListeners() {
           [SIWC_SESSION_KEY]: {
             ...session,
             status: 'error',
-            error: 'Authorization timed out. Start authorization again.',
+            error: '授权超时，请重新发起授权。',
           },
         });
       }

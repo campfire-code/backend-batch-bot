@@ -3,12 +3,8 @@ import { getPlaceholderForType } from '../src/utils/prompt-placeholder';
 
 describe('getPlaceholderForType', () => {
   it('returns API-specific prompt placeholders', () => {
-    expect(getPlaceholderForType('aiTap')).toBe(
-      'What element do you want to tap?',
-    );
-    expect(getPlaceholderForType('aiQuery')).toBe('What do you want to query?');
-    expect(getPlaceholderForType('aiAssert')).toBe(
-      'What do you want to assert?',
-    );
+    expect(getPlaceholderForType('aiTap')).toBe('想点击哪个元素？');
+    expect(getPlaceholderForType('aiQuery')).toBe('想提取什么数据？');
+    expect(getPlaceholderForType('aiAssert')).toBe('想断言什么条件？');
   });
 });

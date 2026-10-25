@@ -222,6 +222,6 @@ describe('extension SIWC authorization', () => {
       active: true,
     });
     expect(update).toHaveBeenCalledTimes(1);
-    await expect(startSiwcLogin()).rejects.toThrow('already in progress');
+    await expect(startSiwcLogin()).rejects.toThrow('授权正在进行中');
   });
 });

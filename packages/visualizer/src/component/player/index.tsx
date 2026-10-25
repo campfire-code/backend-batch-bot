@@ -217,7 +217,7 @@ export function Player(props?: {
       if (!content && props?.reportUrl) {
         const response = await fetch(props.reportUrl);
         if (!response.ok) {
-          throw new Error(`Report request failed (${response.status})`);
+          throw new Error(`报告请求失败（${response.status}）`);
         }
         content = await response.text();
       }
@@ -227,7 +227,7 @@ export function Player(props?: {
         onDownloadReport: props?.onDownloadReport,
       });
     } catch (error) {
-      notifyError(error, { title: 'Failed to download report' });
+      notifyError(error, { title: '下载报告失败' });
     }
   }, [
     props?.onDownloadReport,
@@ -359,10 +359,10 @@ export function Player(props?: {
         },
         (pct) => setExportProgress(Math.round(pct * 100)),
       );
-      message.success('Video exported');
+      message.success('视频已导出');
     } catch (e) {
       console.error('Export failed:', e);
-      notifyError(e, { title: 'Video export failed' });
+      notifyError(e, { title: '视频导出失败' });
     } finally {
       exportInFlightRef.current = false;
       setIsExporting(false);
@@ -388,9 +388,7 @@ export function Player(props?: {
         markers.push({
           percent,
           title:
-            parts.length > 0
-              ? parts.join(': ')
-              : `Chapter ${markers.length + 1}`,
+            parts.length > 0 ? parts.join(': ') : `第 ${markers.length + 1} 步`,
           frame: globalFrame,
         });
       }
@@ -402,8 +400,8 @@ export function Player(props?: {
   const hasReport = Boolean(reportFileContent || props?.reportUrl);
   const reportActionLabel =
     props?.reportFormat === 'html-and-external-assets'
-      ? 'Open report'
-      : 'Download report';
+      ? '打开报告'
+      : '下载报告';
   const canDownloadReport = props?.canDownloadReport !== false;
   const presentation = props?.presentation ?? 'default';
 
@@ -418,7 +416,7 @@ export function Player(props?: {
           data-presentation={presentation}
         >
           <div className="player-empty-state">
-            <span className="player-empty-text">No replay available</span>
+            <span className="player-empty-text">暂无可回放内容</span>
             <Button
               icon={<DownloadOutlined />}
               onClick={() => {
@@ -642,9 +640,7 @@ export function Player(props?: {
                         )}
                       </span>
                       <span className="player-export-label">
-                        {isExporting
-                          ? `Exporting ${exportProgress}%`
-                          : 'Export video'}
+                        {isExporting ? `导出中 ${exportProgress}%` : '导出视频'}
                       </span>
                     </div>
 
@@ -673,7 +669,7 @@ export function Player(props?: {
                           style={{ width: '16px', height: '16px' }}
                         />
                         <span style={{ fontSize: '14px', marginRight: '16px' }}>
-                          Focus on cursor
+                          聚焦光标
                         </span>
                       </div>
                       <Switch
@@ -706,7 +702,7 @@ export function Player(props?: {
                           style={{ width: '16px', height: '16px' }}
                         />
                         <span style={{ fontSize: '14px', marginRight: '16px' }}>
-                          Subtitle
+                          字幕
                         </span>
                       </div>
                       <Switch
@@ -731,7 +727,7 @@ export function Player(props?: {
                       <ThunderboltOutlined
                         style={{ width: '16px', height: '16px' }}
                       />
-                      <span style={{ fontSize: '14px' }}>Playback speed</span>
+                      <span style={{ fontSize: '14px' }}>播放速度</span>
                     </div>
                     {([0.5, 1, 1.5, 2] as PlaybackSpeedType[]).map((speed) => (
                       <div

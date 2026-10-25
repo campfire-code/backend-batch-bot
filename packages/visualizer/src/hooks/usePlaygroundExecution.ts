@@ -30,7 +30,7 @@ import { allScriptsFromDump } from '../utils/replay-scripts';
  * Format error object to string
  */
 export function formatPlaygroundError(error: unknown): string {
-  if (!error) return 'Unknown error';
+  if (!error) return '未知错误';
   if (typeof error === 'string') return error;
   if (typeof error === 'object') {
     const errorWithDetails = error as {
@@ -55,7 +55,7 @@ export function formatPlaygroundError(error: unknown): string {
 
   const stringified = String(error);
   return stringified === '[object Object]'
-    ? 'Unknown error (an empty error object was received)'
+    ? '未知错误（收到的错误对象为空）'
     : stringified;
 }
 
@@ -153,7 +153,7 @@ async function loadReportReplay(
   try {
     const response = await fetch(result.report.replayUrl);
     if (!response.ok) {
-      throw new Error(`Report replay request failed (${response.status})`);
+      throw new Error(`报告回放请求失败（${response.status}）`);
     }
     const dump = (await response.json()) as IReportActionDump;
     result.dump = restoreReportImageReferences(
@@ -440,7 +440,7 @@ export function usePlaygroundExecution(options: UsePlaygroundExecutionOptions) {
       const resultItem: InfoListItem = {
         id: `result-${thisRunningId}`,
         type: 'result',
-        content: 'Execution result',
+        content: '执行结果',
         timestamp: new Date(),
         result: result,
         loading: false,
@@ -552,7 +552,7 @@ export function usePlaygroundExecution(options: UsePlaygroundExecutionOptions) {
               {
                 id: `stop-result-${thisRunningId}`,
                 type: 'result',
-                content: 'Execution stopped by user',
+                content: '已由用户停止执行',
                 timestamp: new Date(),
                 result: {
                   result: null,
@@ -574,7 +574,7 @@ export function usePlaygroundExecution(options: UsePlaygroundExecutionOptions) {
             {
               id: `stop-${thisRunningId}`,
               type: 'system',
-              content: 'Operation stopped',
+              content: '操作已停止',
               timestamp: new Date(),
               loading: false,
             },

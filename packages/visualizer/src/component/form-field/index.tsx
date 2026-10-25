@@ -15,8 +15,47 @@ interface FormFieldProps {
   placeholder?: string; // Add optional placeholder prop
 }
 
+const FIELD_LABEL_ZH: Record<string, string> = {
+  value: '内容',
+  keyName: '按键',
+  direction: '方向',
+  scrollType: '滚动方式',
+  distance: '距离',
+  locate: '目标元素',
+  prompt: '提示词',
+  duration: '时长',
+  timeMs: '时长（毫秒）',
+  mode: '模式',
+  autoDismissKeyboard: '自动收起键盘',
+  from: '起点',
+  to: '终点',
+  start: '起点',
+  end: '终点',
+  url: '网址',
+  text: '文本',
+};
+
+const ENUM_VALUE_ZH: Record<string, string> = {
+  up: '向上',
+  down: '向下',
+  left: '向左',
+  right: '向右',
+  singleAction: '单次滚动',
+  scrollToBottom: '滚动到底部',
+  scrollToTop: '滚动到顶部',
+  scrollToRight: '滚动到最右',
+  scrollToLeft: '滚动到最左',
+  replace: '替换',
+  clear: '清空',
+  typeOnly: '仅输入',
+  append: '追加',
+};
+
+export const fieldLabelForKey = (key: string) =>
+  FIELD_LABEL_ZH[key] ?? key.charAt(0).toUpperCase() + key.slice(1);
+
 const renderLabel = (label: string, isOptional: boolean) => {
-  return `${label}${isOptional ? ' (Optional)' : ''}`;
+  return `${label}${isOptional ? '（可选）' : ''}`;
 };
 
 export const TextField: React.FC<Omit<FormFieldProps, 'isLocateField'>> = ({
@@ -26,15 +65,13 @@ export const TextField: React.FC<Omit<FormFieldProps, 'isLocateField'>> = ({
   marginBottom,
   placeholder: customPlaceholder,
 }) => {
-  const placeholder = customPlaceholder || `Enter ${name}`;
+  const placeholder = customPlaceholder || `请输入${name}`;
   return (
     <Form.Item
       key={name}
       name={['params', name]}
       label={renderLabel(label, !isRequired)}
-      rules={
-        isRequired ? [{ required: true, message: `Please input ${name}` }] : []
-      }
+      rules={isRequired ? [{ required: true, message: `请输入${name}` }] : []}
       style={{ marginBottom }}
       colon={false}
     >
@@ -50,8 +87,7 @@ export const LocateField: React.FC<Omit<FormFieldProps, 'isLocateField'>> = ({
   marginBottom,
   placeholder: customPlaceholder,
 }) => {
-  const placeholder =
-    customPlaceholder || `Describe the ${name}, use natural language`;
+  const placeholder = customPlaceholder || `请用自然语言描述${label}`;
   return (
     <Form.Item
       key={name}
@@ -62,7 +98,7 @@ export const LocateField: React.FC<Omit<FormFieldProps, 'isLocateField'>> = ({
           ? [
               {
                 required: true,
-                message: `The ${name} is required`,
+                message: `${label}不能为空`,
               },
             ]
           : []
@@ -86,7 +122,8 @@ export const EnumField: React.FC<Omit<FormFieldProps, 'isLocateField'>> = ({
   const enumValues = (fieldSchema as ZodRuntimeAccess)._def?.values || [];
   const selectOptions = enumValues.map((value: string) => ({
     value,
-    label: value.charAt(0).toUpperCase() + value.slice(1),
+    label:
+      ENUM_VALUE_ZH[value] ?? value.charAt(0).toUpperCase() + value.slice(1),
   }));
 
   return (
@@ -94,14 +131,12 @@ export const EnumField: React.FC<Omit<FormFieldProps, 'isLocateField'>> = ({
       key={name}
       name={['params', name]}
       label={label}
-      rules={
-        isRequired ? [{ required: true, message: `Please select ${name}` }] : []
-      }
+      rules={isRequired ? [{ required: true, message: `请选择${name}` }] : []}
       style={{ marginBottom }}
       colon={false}
     >
       <Select
-        placeholder={customPlaceholder || `Select ${name}`}
+        placeholder={customPlaceholder || `请选择${name}`}
         options={selectOptions}
       />
     </Form.Item>
@@ -126,22 +161,22 @@ export const NumberField: React.FC<Omit<FormFieldProps, 'isLocateField'>> = ({
     <Form.Item
       key={name}
       name={['params', name]}
-      label={`${label}${name === 'distance' ? ' (px)' : ''}`}
+      label={`${label}${name === 'distance' ? '（px）' : ''}`}
       rules={
         isRequired
           ? [
-              { required: true, message: `Please input ${name}` },
+              { required: true, message: `请输入${name}` },
               {
                 type: 'number',
                 min,
-                message: `${label} must be at least ${min}`,
+                message: `${label}不能小于 ${min}`,
               },
             ]
           : [
               {
                 type: 'number',
                 min,
-                message: `${label} must be at least ${min}`,
+                message: `${label}不能小于 ${min}`,
               },
             ]
       }
@@ -170,8 +205,8 @@ export const BooleanField: React.FC<Omit<FormFieldProps, 'isLocateField'>> = ({
   placeholder: customPlaceholder,
 }) => {
   const selectOptions = [
-    { value: true, label: 'True' },
-    { value: false, label: 'False' },
+    { value: true, label: '是' },
+    { value: false, label: '否' },
   ];
 
   return (
@@ -179,14 +214,12 @@ export const BooleanField: React.FC<Omit<FormFieldProps, 'isLocateField'>> = ({
       key={name}
       name={['params', name]}
       label={renderLabel(label, !isRequired)}
-      rules={
-        isRequired ? [{ required: true, message: `Please select ${name}` }] : []
-      }
+      rules={isRequired ? [{ required: true, message: `请选择${name}` }] : []}
       style={{ marginBottom }}
       colon={false}
     >
       <Select
-        placeholder={customPlaceholder || `Select ${name}`}
+        placeholder={customPlaceholder || `请选择${name}`}
         options={selectOptions}
       />
     </Form.Item>

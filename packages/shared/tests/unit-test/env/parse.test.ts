@@ -98,13 +98,13 @@ describe('validateModelFamily', () => {
 
   it('should throw on invalid value', () => {
     expect(() => validateModelFamily('invalid' as any)).toThrow(
-      /Invalid MIDSCENE_MODEL_FAMILY value: invalid/,
+      /MIDSCENE_MODEL_FAMILY 的值无效：invalid/,
     );
     expect(() => validateModelFamily('invalid' as any)).toThrow(
-      `Current version v${version}`,
+      `当前版本 v${version}`,
     );
     expect(() => validateModelFamily('invalid' as any)).toThrow(
-      MODEL_FAMILY_VALUES.join(', '),
+      MODEL_FAMILY_VALUES.join('、'),
     );
     expect(() => validateModelFamily('invalid' as any)).toThrow(
       'https://midscenejs.com/model-api-setup.html',

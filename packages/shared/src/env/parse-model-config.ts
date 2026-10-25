@@ -43,7 +43,7 @@ const getCurrentVersion = (): string => {
 };
 
 const getInvalidModelFamilyMessage = (modelFamily: TModelFamily): string =>
-  `Invalid MIDSCENE_MODEL_FAMILY value: ${modelFamily}. Current version v${getCurrentVersion()} accepts the following model families: ${MODEL_FAMILY_VALUES.join(', ')}. You can also visit ${MODEL_CONFIG_DOC_URL} for the latest configuration information.`;
+  `MIDSCENE_MODEL_FAMILY 的值无效：${modelFamily}。当前版本 v${getCurrentVersion()} 支持的模型系列：${MODEL_FAMILY_VALUES.join('、')}。最新配置说明见 ${MODEL_CONFIG_DOC_URL}。`;
 
 type TModelConfigKeys =
   | typeof LOCATE_MODEL_CONFIG_KEYS
@@ -378,7 +378,7 @@ export const decideModelConfigFromIntentConfig = (
 
   assert(
     finalResult.authMode === 'siwc' || finalResult.openaiBaseURL,
-    `failed to get base URL of model (intent=${intent}). See https://midscenejs.com/model-api-setup`,
+    `没有填写模型的接口地址（用途：${intent}）。详见 https://midscenejs.com/model-api-setup`,
   );
 
   if (!finalResult.modelName) {

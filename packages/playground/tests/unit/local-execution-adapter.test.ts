@@ -393,7 +393,7 @@ describe('LocalExecutionAdapter', () => {
       const result = await adapterNoAgent.cancelTask('request-123');
 
       expect(result).toEqual({
-        error: 'No active agent found for this requestId',
+        error: '没有找到对应的运行中任务',
       });
     });
 
@@ -408,7 +408,7 @@ describe('LocalExecutionAdapter', () => {
       const result = await adapter.cancelTask('request-123');
 
       expect(result).toEqual({
-        error: 'Failed to cancel: Destroy failed',
+        error: '取消失败：Destroy failed',
         dump: expect.any(ReportActionDump),
         reportHTML: null,
       });

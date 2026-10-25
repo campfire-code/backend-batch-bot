@@ -173,7 +173,7 @@ export class LocalExecutionAdapter extends BasePlaygroundAdapter {
     options: ExecutionOptions,
   ): Promise<unknown> {
     if (this.executionController) {
-      throw new Error('Another task is already running');
+      throw new Error('已有任务正在运行');
     }
     const controller = new AbortController();
     this.executionController = controller;
@@ -358,7 +358,7 @@ export class LocalExecutionAdapter extends BasePlaygroundAdapter {
     );
     const agent = this.agent;
     if (!agent) {
-      return { error: 'No active agent found for this requestId' };
+      return { error: '没有找到对应的运行中任务' };
     }
 
     // Get execution data BEFORE destroying the agent
@@ -401,12 +401,11 @@ export class LocalExecutionAdapter extends BasePlaygroundAdapter {
       await agent.destroy?.();
       return { success: true, dump, reportHTML };
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage = error instanceof Error ? error.message : '未知错误';
       console.error(
         `[LocalExecutionAdapter] Failed to cancel agent: ${errorMessage}`,
       );
-      return { error: `Failed to cancel: ${errorMessage}`, dump, reportHTML };
+      return { error: `取消失败：${errorMessage}`, dump, reportHTML };
     } finally {
       // destroy() invalidates the Agent even when report or device cleanup fails.
       if (this.agent === agent) this.agent = null;

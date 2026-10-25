@@ -1,6 +1,6 @@
 {
-  "name": "Midscene.js",
-  "description": "Open-source SDK for automating web pages using natural language through AI.",
+  "name": "后台批量操作机器人",
+  "description": "用大白话下指令，让 AI 看着屏幕自己点击、填写，批量处理网页后台里的重复操作。",
   "version": "1.118",
   "manifest_version": 3,
   "permissions": [
@@ -35,7 +35,7 @@
   ],
   "action": {
     "default_icon": "icon128.png",
-    "default_title": "Midscene.js"
+    "default_title": "后台批量操作机器人"
   },
   "side_panel": {
     "default_path": "./index.html"

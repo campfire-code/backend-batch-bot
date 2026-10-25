@@ -140,12 +140,12 @@ export const ensureScriptInjected = async (
 // Inject content script
 export const injectScript = async (currentTab: chrome.tabs.Tab | null) => {
   if (!isChromeExtension()) {
-    message.error('Chrome extension environment required for script injection');
+    message.error('注入脚本需要在 Chrome 插件环境中进行');
     return false;
   }
 
   if (!currentTab?.id) {
-    message.error('No active tab found');
+    message.error('未找到当前标签页');
     return false;
   }
 
@@ -179,18 +179,16 @@ export const injectScript = async (currentTab: chrome.tabs.Tab | null) => {
       error,
     );
     if (error instanceof Error && error.message.includes('Cannot access')) {
-      message.error(
-        'Cannot inject script on this page (Chrome internal pages are restricted)',
-      );
+      message.error('无法在此页面注入脚本（Chrome 内部页面受限）');
     } else if (
       error instanceof Error &&
       error.message.includes('chrome-extension://')
     ) {
-      message.error('Cannot inject script on Chrome extension pages');
+      message.error('无法在 Chrome 插件页面注入脚本');
     } else if (error instanceof Error && error.message.includes('chrome://')) {
-      message.error('Cannot inject script on Chrome system pages');
+      message.error('无法在 Chrome 系统页面注入脚本');
     } else {
-      message.error(`Failed to inject recording script: ${error}`);
+      message.error(`注入录制脚本失败：${error}`);
     }
     return false;
   }
@@ -202,7 +200,7 @@ export const exportEventsToFile = (
   sessionName: string,
 ) => {
   if (events.length === 0) {
-    message.warning('No events to export');
+    message.warning('没有可导出的事件');
     return;
   }
 
@@ -216,7 +214,7 @@ export const exportEventsToFile = (
   link.click();
 
   URL.revokeObjectURL(url);
-  message.success(`Events from "${sessionName}" exported successfully`);
+  message.success(`已成功导出「${sessionName}」的事件`);
 };
 
 export const generateSessionName = () => {
@@ -341,7 +339,7 @@ export const generateRecordTitle = async (
       const messageContent: MessageContent[] = [
         {
           type: 'text',
-          text: `Generate a concise title (5-7 words) and brief description (1-2 sentences) for a browser recording session with the following events:\n\n${JSON.stringify(summary, null, 2)}\n\nRespond with a JSON object containing "title" and "description" fields. The title should be action-oriented and highlight the main task accomplished. The description should provide slightly more detail about what was done.`,
+          text: `Generate a concise title (5-7 words) and brief description (1-2 sentences) for a browser recording session with the following events:\n\n${JSON.stringify(summary, null, 2)}\n\nRespond with a JSON object containing "title" and "description" fields. The title should be action-oriented and highlight the main task accomplished. The description should provide slightly more detail about what was done. 请用简体中文输出标题和描述。`,
         },
       ];
 
@@ -451,43 +449,43 @@ export const diagnoseRecordingChain = async (
 
   // Check 1: Extension environment
   if (!isChromeExtension()) {
-    issues.push('Not in Chrome extension environment');
+    issues.push('当前不在 Chrome 插件环境中');
     return { issues, info };
   }
-  info.push('✓ Chrome extension environment detected');
+  info.push('✓ 已检测到 Chrome 插件环境');
 
   // Check 2: Current tab
   if (!currentTab || !currentTab.id) {
-    issues.push('No active tab or invalid tab ID');
+    issues.push('没有当前标签页，或标签页 ID 无效');
     return { issues, info };
   }
-  info.push(`✓ Active tab found: ${currentTab.url} (ID: ${currentTab.id})`);
+  info.push(`✓ 已找到当前标签页：${currentTab.url}（ID：${currentTab.id}）`);
 
   // Check 3: Tab URL validity - more detailed checking
   if (currentTab.url?.startsWith('chrome://')) {
-    issues.push('Cannot record on Chrome internal pages (chrome://)');
+    issues.push('无法在 Chrome 内部页面（chrome://）录制');
     return { issues, info };
   }
   if (currentTab.url?.startsWith('chrome-extension://')) {
-    issues.push('Cannot record on Chrome extension pages');
+    issues.push('无法在 Chrome 插件页面录制');
     return { issues, info };
   }
   if (currentTab.url?.startsWith('moz-extension://')) {
-    issues.push('Cannot record on Firefox extension pages');
+    issues.push('无法在 Firefox 插件页面录制');
     return { issues, info };
   }
   if (!currentTab.url || currentTab.url === 'about:blank') {
-    issues.push('Tab has no URL or is blank page');
+    issues.push('标签页没有网址，或是空白页');
     return { issues, info };
   }
-  info.push('✓ Tab URL is recordable');
+  info.push('✓ 标签页网址可以录制');
 
   // Check 4: Tab loading status
   if (currentTab.status === 'loading') {
-    issues.push('Tab is still loading - wait for page to complete loading');
+    issues.push('标签页仍在加载，请等待页面加载完成');
     return { issues, info };
   }
-  info.push('✓ Tab has finished loading');
+  info.push('✓ 标签页已加载完成');
 
   // Check 5: Content script injection
   try {
@@ -496,41 +494,37 @@ export const diagnoseRecordingChain = async (
     });
     const isInjected = await checkContentScriptInjected(currentTab.id);
     if (isInjected) {
-      info.push('✓ Content script is injected and responding');
+      info.push('✓ 内容脚本已注入且响应正常');
     } else {
-      issues.push('Content script not injected or not responding');
+      issues.push('内容脚本未注入或无响应');
 
       // Try to inject
       try {
         recordLogger.debug('Attempting to inject content script');
         await injectScript(currentTab);
-        info.push('✓ Content script injection attempted');
+        info.push('✓ 已尝试注入内容脚本');
 
         // Check again after injection with longer wait
         await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 2 seconds
         const isInjectedAfter = await checkContentScriptInjected(currentTab.id);
         if (isInjectedAfter) {
-          info.push('✓ Content script injection successful');
+          info.push('✓ 内容脚本注入成功');
         } else {
-          issues.push(
-            'Content script injection failed or not responding after injection. Try refreshing the page.',
-          );
+          issues.push('内容脚本注入失败，或注入后无响应。请尝试刷新页面。');
         }
       } catch (error: any) {
         const errorMsg = error?.message || error;
         if (errorMsg.includes('Cannot access')) {
-          issues.push(
-            'Cannot inject script: Page access denied (may be protected page)',
-          );
+          issues.push('无法注入脚本：页面拒绝访问（可能是受保护的页面）');
         } else if (errorMsg.includes('chrome-extension://')) {
-          issues.push('Cannot inject script on extension pages');
+          issues.push('无法在插件页面注入脚本');
         } else {
-          issues.push(`Content script injection failed: ${errorMsg}`);
+          issues.push(`内容脚本注入失败：${errorMsg}`);
         }
       }
     }
   } catch (error: any) {
-    issues.push(`Error checking content script: ${error?.message || error}`);
+    issues.push(`检查内容脚本时出错：${error?.message || error}`);
   }
 
   recordLogger.info('Diagnosis complete');
@@ -778,53 +772,53 @@ const generateDetailedSequentialMindmap = (
 
 // Generate markdown table for event details
 const generateEventsMarkdownTable = (sessions: RecordingSession[]): string => {
-  let markdown = '# Test Events Report\n\n';
+  let markdown = '# 测试事件报告\n\n';
 
   sessions.forEach((session, sessionIndex) => {
     if (session.events.length === 0) return;
 
     markdown += `## ${session.name}\n\n`;
     if (session.description) {
-      markdown += `**Description:** ${session.description}\n\n`;
+      markdown += `**描述：** ${session.description}\n\n`;
     }
-    markdown += `**Created:** ${new Date(session.createdAt).toLocaleString()}\n\n`;
+    markdown += `**创建时间：** ${new Date(session.createdAt).toLocaleString('zh-CN')}\n\n`;
 
-    markdown += '| Page | Screenshot Before | Screenshot After | Action |\n';
+    markdown += '| 页面 | 操作前截图 | 操作后截图 | 操作 |\n';
     markdown += '|------|------------|------------|--------|\n';
 
     session.events.forEach((event, eventIndex) => {
-      let expected = 'N/A';
+      let expected = '无';
       const page = event.title || event.url || '';
       const screenshotBefore = event.screenshotBefore
         ? `![](./images/screenshot_${sessionIndex}_${eventIndex}_before.png)`
-        : 'N/A';
+        : '无';
       const screenshotAfter = event.screenshotAfter
         ? `![](./images/screenshot_${sessionIndex}_${eventIndex}_after.png)`
-        : 'N/A';
+        : '无';
       if (event.type === 'navigation') {
-        expected = `Navigate to ${event.url}`;
+        expected = `打开 ${event.url}`;
       }
 
       let action = '';
       switch (event.type) {
         case 'click':
-          action = `Click on ${event.elementDescription || 'element'}`;
+          action = `点击 ${event.elementDescription || '元素'}`;
           break;
         case 'input':
-          action = `Input "${event.value}" into ${event.elementDescription || 'field'}`;
+          action = `在 ${event.elementDescription || '输入框'} 中输入「${event.value}」`;
           break;
         case 'navigation':
-          action = `Navigate to ${event.url}`;
+          action = `打开 ${event.url}`;
           break;
         default:
-          action = `${event.type} on ${event.elementDescription || 'element'}`;
+          action = `${event.type}：${event.elementDescription || '元素'}`;
       }
 
       markdown += `| ${page} | ${screenshotBefore} | ${screenshotAfter} | ${action} |\n`;
     });
 
     if (session.generatedCode?.yaml || session.generatedCode?.playwright) {
-      markdown += '## Generated Code\n\n';
+      markdown += '## 生成的代码\n\n';
       if (session.generatedCode?.yaml) {
         markdown += '### YAML\n\n';
         markdown += `\`\`\`yaml\n${session.generatedCode.yaml}\n\`\`\`\n\n`;
@@ -863,7 +857,7 @@ export const exportAllEventsToZip = async (sessions: RecordingSession[]) => {
     );
 
     if (sessionsWithEvents.length === 0) {
-      message.warning('No sessions with events to export');
+      message.warning('没有包含事件的会话可导出');
       return;
     }
 
@@ -895,15 +889,15 @@ export const exportAllEventsToZip = async (sessions: RecordingSession[]) => {
       await generateDetailedSequentialMindmap(sessionsWithEvents);
 
     // Combine mindmap and table in automation-story.md
-    const combinedContent = `# Test Events Report
+    const combinedContent = `# 测试事件报告
 
-## Test Flow Mindmap
+## 测试流程思维导图
 
 \`\`\`mermaid
 ${aiMindmap}
 \`\`\`
 
-${markdownContent.replace('# Test Events Report\n\n', '')}`;
+${markdownContent.replace('# 测试事件报告\n\n', '')}`;
 
     zip.file('automation-story.md', combinedContent);
 
@@ -914,9 +908,9 @@ ${markdownContent.replace('# Test Events Report\n\n', '')}`;
     const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
     saveAs(zipBlob, `midscene-test-events-${timestamp}.zip`);
 
-    message.success('All events exported successfully!');
+    message.success('已成功导出全部事件');
   } catch (error) {
     console.error('Error exporting all events:', error);
-    message.error('Failed to export events');
+    message.error('导出事件失败');
   }
 };

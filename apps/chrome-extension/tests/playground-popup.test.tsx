@@ -280,7 +280,7 @@ describe('PlaygroundPopup', () => {
     expect(verifyCallbacks.at(-1)).toEqual(expect.any(Function));
     const { SiwcLoginButton } = await import('../src/extension/siwc/button');
     expect(modelActionSlots.at(-1)).toMatchObject({ type: SiwcLoginButton });
-    expect(container.textContent).not.toContain('Sign in with ChatGPT');
+    expect(container.textContent).not.toContain('使用 ChatGPT 登录');
     await act(async () => {
       root.unmount();
     });
